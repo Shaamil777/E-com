@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Add the background image */
+       body{
+        background-color: #343e52;
+       }
+
+        .back-arrow {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.8); /* Adding transparency */
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid #e1e1e1;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            margin-top: 40px;
+            color: #111;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .sign-in-link {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .sign-in-link a {
+            color: #4B5563;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .sign-in-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Optional: Customize the width of the form */
+        .form-container {
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="row w-100 justify-content-center">
+        <!-- Form Section -->
+        <div class="col-md-6 col-sm-12 d-flex justify-content-center align-items-center">
+            <div class="form-container p-4">
+                <span class="back-arrow">←</span>
+                <form id="form" method="post" action="/register/Verify">
+                    <h1>Verify Your Account!!</h1>
+                    <p>The One-Time Password has been sent to your corresponding email. Please enter your OTP.</p>
+                    <div class="form-group">
+                        <input type="password" name="otp" class="form-control" placeholder="OTP" required>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100" style="margin-bottom: 10px;">Verify</button>
+                    <div>
+                        <p id="timer">Resend OTP in <span id="countDown">30</span> Seconds
+                        </p>
+                    <a  href="#" class="d-block text-center mt-3"><p id="resendLink" style="display: none;" onclick="startCounter()">Resend OTP?</p></a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+<script>
+
+    function startCounter(){
+    let countValue = 30;
+    let countElement = document.getElementById('countDown')
+    const timer = document.getElementById('timer')
+    const resendLink = document.getElementById('resendLink')
+
+
+
+    const countdownintervel = setInterval(()=>{
+        countValue--;
+        countElement.textContent=countValue;
+
+        if(countValue<=0){
+            clearInterval(countdownintervel)
+            timer.style.display="none";
+            resendLink.style.display="block"
+        }
+    },1000)
+}
+
+</script>
