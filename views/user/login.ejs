@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/user.css">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .login-container {
+            max-width: 500px; /* Increase width */
+            padding: 40px; /* Increase padding */
+            margin: 100px auto; /* Adjust margin for centering */
+            background-color: #fff;
+            border-radius: 15px; /* Increase border radius */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Slightly larger shadow */
+        }
+        h2 {
+            font-size: 1.8rem; /* Larger font size for heading */
+        }
+        .form-control {
+            border-radius: 50px;
+            font-size: 1.1rem; /* Larger font size for input */
+            padding: 15px; /* Increase padding for inputs */
+        }
+        .btn-login {
+            border-radius: 50px;
+            background-color: #343a40;
+            color: #fff;
+            font-weight: bold;
+            padding: 15px; /* Increase button padding */
+            font-size: 1.1rem; /* Larger font size for button */
+        }
+        .btn-login:hover {
+            background-color: #495057;
+        }
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 30px 0;
+            font-size: 1rem; /* Adjust font size */
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .divider::before {
+            left: 0;
+        }
+        .divider::after {
+            right: 0;
+        }
+        .social-button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1rem; /* Larger font for social login */
+            color: #333;
+        }
+        .social-button img {
+            width: 24px;
+            height: 24px; /* Slightly larger icon */
+        }
+        .text-center a {
+            font-size: 1rem; /* Adjust font size */
+        }
+        /* Header styles */
+        .header {
+            background-color: #EDF1FF;
+            color: rgb(0, 0, 0);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header a {
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+     <!-- Simple Header -->
+     <div class="header">
+        <div class="brand-name">URBANWORN</div>
+        <div class="return-home"><a href="/home">Return to Home</a></div>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="form-container col-md-6 col-lg-4">
+            <!-- <span class="back-arrow">←</span> -->
+            <form id="form" method="post" action="/login">
+                <div class="form-group">
+                    <input id="email" name="email" type="email" class="form-control" placeholder="Email address">
+                </div>
+              
+                <div class="form-group">
+                    <input id="password" name="password" type="password" class="form-control" placeholder="Password">
+                </div>
+                <p id="errmsg" style="color: red; display: none;"></p>
+                <% if (message) { %>
+                    <p id="errorMessage" class="error-message" style="color: red;"><%= message %></p>
+                <% } %>
+
+                <button id="submit" type="submit" class="btn btn-dark btn-block">Log in</button>
+                <div class="divider">Or</div>
+
+                <div class="d-flex social-buttons">
+                    <a href="/auth/google"  class="social-button">
+                        <img src="/images/google icon.png" alt="Google">
+                        Log in with Google
+                    </a>
+
+                </div>
+
+                <div class="text-center mt-3">
+                    Dont have an Account? <a href="/signup">Sign in</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <%- include('../partials/userFooter') %>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<script>
+    const form = document.getElementById('form');
+    form.addEventListener('submit', (e) => {
+        if (!validi()) {
+            e.preventDefault();
+        }
+    });
+
+    function validi() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;  // If password validation is required
+        const err = document.getElementById('errmsg');
+
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        
+
+        if (!emailPattern.test(email)) {  // Show error if the email does NOT match the pattern
+            err.style.display = "block";
+            err.textContent = "Please enter a valid email address.";
+            setTimeout(() => {
+                err.style.display = "none";
+            }, 3000);
+            return false;
+        }
+
+        // Additional validation for password (optional)
+        // Example: Check if password is at least 6 characters long
+        if (password.length < 6) {
+            err.style.display = "block";
+            err.textContent = "Password must be at least 6 characters long.";
+            setTimeout(() => {
+                err.style.display = "none";
+            }, 3000);
+            return false;
+        }
+
+        return true; // All validations passed
+    }
+</script>

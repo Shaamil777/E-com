@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/user.css">
+
+    <title>Ecommerce Website</title>
+    
+  </head>
+  <body>
+
+    <!--================ HEADER =================-->
+
+    <%- include('../partials/userHeader') %>
+
+    <main class="main">
+        <!--=============== BREADCRUMB ===============-->
+        <section class="breadcrumb">
+          <ul class="breadcrumb__list flex container">
+            <li><a href="home" class="breadcrumb__link">Home</a></li>
+            <li><span class="breadcrumb__link">></span></li>
+            <li><span class="breadcrumb__link">Account</span></li>
+          </ul>
+        </section>
+    
+        <!--=============== ACCOUNTS ===============-->
+        <section class="accounts section--lg">
+          <div class="accounts__container container grid">
+            <div class="account__tabs">
+                <p id="dashboard" class="account__tab " data-target="#dashboard">
+                    <i class="fi fi-rs-settings-sliders"></i> Profile
+                  </p>
+               
+                  <p id="orders" class="account__tab" data-target="#orders">
+                    <i  class="fi fi-rs-shopping-bag"></i> Orders
+                  </p>
+                  <p id="updateProfile" class="account__tab active-tab " data-target="#update-profile">
+                    <i class="fi fi-rs-user"></i> Update Profile
+                  </p>
+                  <p id="wallet" class="account__tab" data-target="#wallet">
+                    <i class="fi fi-rs-wallet"></i> Wallet
+                  </p>
+                  <p id="address" class="account__tab " data-target="#address">
+                    <i class="fi fi-rs-marker"></i> My Address
+                  </p>
+                  <p id="changePassword" class="account__tab " data-target="#change-password">
+                    <i class="fi fi-rs-settings-sliders"></i> Change Password
+                  </p>
+                  <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
+                </div>
+    
+
+
+    
+            <div class="tabs__content">
+
+                <div class="tab__content" id="update-profile">
+                    <h3 class="tab__header">Update Profile</h3>
+                    <div class="tab__body">
+                      <form  id="form" action="/updateprofile" method="post" class="form grid">
+                        <input
+                        id="username"
+                        name="username"
+                          type="text"
+                          placeholder="Username"
+                          class="form__input"
+                        />
+                        <p id="nameErr" style="color: red;"></p>
+                        <input
+                        id="phone"
+                        name="phone"
+                          type="number"
+                          placeholder="phone"
+                          class="form__input"
+                        />
+                        <p id="phoneErr" style="color: red;"></p>
+
+                        <div class="form__btn">
+                          <button id="btn" type="submit" class="btn btn-success btn--md">Save</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                </div>
+           
+        
+        <%- include('../partials/userFooter') %>
+        
+          
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="assets/js/main.js"></script>
+  </body>
+  </html>
+
+  <script>
+    document.getElementById('dashboard').addEventListener('click', function(){
+        window.location.href = '/profile'
+    })
+
+    document.getElementById('orders').addEventListener('click', function(){
+        window.location.href = '/orders'
+    })
+
+    document.getElementById('updateProfile').addEventListener('click', function(){
+        window.location.href = '/updateprofile'
+    })
+
+    document.getElementById('wallet').addEventListener('click', function(){
+        window.location.href = '/wallet'
+    })
+
+    document.getElementById('address').addEventListener('click', function(){
+        window.location.href = '/address'
+    })
+
+    document.getElementById('changePassword').addEventListener('click', function(){
+        window.location.href = '/changepassword'
+    })
+</script>
+<script>
+    // Attach a single submit listener to the form
+    document.getElementById('form').addEventListener('submit', async function(e){
+      e.preventDefault(); // Prevent form submission to handle it manually
+  
+      // Validate form fields
+      const isValid = validateForm();
+      
+      if (!isValid) return; // If validation fails, do not proceed with the submission
+  
+      // If validation is successful, get the form data and make the AJAX request
+      const username = document.getElementById('username').value;
+      const phone = document.getElementById('phone').value;
+  
+      try {
+        const response = await fetch('/updateprofile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, phone }),
+        });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          await Swal.fire({
+        title: 'Success!',
+        text: data.message,
+        icon: 'success',
+        confirmButtonColor: '#3085d6'
+      });
+          document.getElementById('username').value = '';
+          document.getElementById('phone').value = '';
+        } else {
+          await Swal.fire({
+        title: 'Error!',
+        text: data.error,
+        icon: 'error',
+        confirmButtonColor: '#3085d6'
+      });
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        await Swal.fire({
+      title: 'Error!',
+      text: 'An unexpected error occurred. Please try again.',
+      icon: 'error',
+      confirmButtonColor: '#3085d6'
+    });
+      }
+    });
+  
+    // Function for validating the form
+    function validateForm() {
+      const name = document.getElementById('username').value;
+      const phone = document.getElementById('phone').value;
+  
+      const nameErr = document.getElementById('nameErr');
+      const phoneErr = document.getElementById('phoneErr');
+  
+      const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
+      const phonePattern = /^\d{10}$/;
+  
+      let isValid = true;
+  
+      // Validate username
+      if (!usernamePattern.test(name)) {
+        nameErr.textContent = 'Username must be 4-20 characters long and can only contain letters and numbers';
+        setTimeout(() => {
+          nameErr.textContent = ''; // Clear the error after 5 seconds
+        }, 5000);
+        isValid = false;
+      }
+  
+      // Validate phone number
+      if (!phonePattern.test(phone)) {
+        phoneErr.textContent = 'Phone number must be 10 digits long';
+        setTimeout(() => {
+          phoneErr.textContent = ''; // Clear the error after 5 seconds
+        }, 5000);
+        isValid = false;
+      }
+  
+      return isValid;
+    }
+  </script>
+  

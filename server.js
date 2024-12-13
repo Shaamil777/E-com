@@ -6,13 +6,15 @@ const app = express()
 const connectDB = require('./db/connectDB')
 const session = require('express-session')
 const passport = require('./config/passport')
+const userAuth = require('./middleware/userAuth')
+require('dotenv').config()
 
 app.set('view engine','ejs')
 
 app.set('views',path.join(__dirname,'views'))
 
 app.use(session({
-    secret:'UrbanWorn',
+    secret:'MuhammadShamilm2324',
     resave:false,
     saveUninitialized:false,
     cookie:{
@@ -25,6 +27,7 @@ connectDB();
 app.use(express.static(path.join(__dirname,'public')))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(userAuth)
 
 app.use(passport.initialize())
 app.use(passport.session())

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Coupon Panel</title>
+  <link rel="stylesheet" href="/styles/usermanagement.css">
+  <style>
+    .swal2-icon {
+  margin: 0 auto !important; /* Center the icon */
+}
+.swal2-modal {
+  text-align: center !important; /* Ensure modal content is centered */
+}
+
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/adminSideBar') %>
+
+  <div class="container-fluid page-body-wrapper">
+    <nav class="navbar p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="navbar-nav w-100">
+          <li class="nav-item w-100"></li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-settings d-none d-lg-block">
+            <a class="nav-link" href="#">
+              <i class="mdi mdi-view-grid"></i>
+            </a>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="mdi mdi-format-line-spacing"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="row p-3">
+      <div class="col-12 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Coupon Management</h4>
+            <div class="table-responsive">
+              <form class="nav-link mt-2 mt-md-0 d-lg-flex search">
+                <input type="text" class="form-control" placeholder="Search coupons">
+                <button class="btn btn-primary">Search</button>
+              </form>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Coupon Code</th>
+                    <th>Valid From</th>
+                    <th>Valid To</th>
+                    <th>Discount (%)</th>
+                    <th>Count</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% coupons.forEach((coupon) => { %>
+                    <tr id="coupon<%= coupon.id %>">
+                      <td><%= coupon.couponCode %></td>
+                      <td><%= new Date(coupon.validFrom).toLocaleDateString('en-GB') %></td>
+                      <td><%= new Date(coupon.validUpto).toLocaleDateString('en-GB') %></td>
+                      <td><%= coupon.discountPercentage %>%</td>
+                      <td><%= coupon.couponCount %></td>
+                      <td><%= coupon.status ? 'Active' : 'Inactive' %></td>
+                      <td>
+                        <button id="btn-update" class="btn btn-outline-danger btn-update" data-id="<%= coupon.id %>">
+                          Update
+                        </button>
+                      </td>
+                      <td>
+                        <button id="btn-delete" class="btn btn-outline-warning btn-delete" data-id="<%= coupon.id %>">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:100px;" class="col-md-4 grid-margin stretch-card userInfoView">
+      <button class="btn-category bg-primary" id="btn-add-coupon">Create New Coupon</button>
+      
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    // Add New Coupon
+    document.getElementById('btn-add-coupon').addEventListener('click', () => {
+      window.location.href = '/admin/coupon/add';
+    });
+
+   
+    //Delete Coupon
+    document.querySelectorAll('.btn-delete').forEach((button) => {
+      button.addEventListener('click', async function () {
+        const couponId = this.getAttribute('data-id');
+        try {
+          const response = await fetch(`/admin/coupon/delete`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ couponId })
+          });
+          const result = await response.json();
+          if (result.success) {
+            swal.fire({
+              icon:'success',
+              title: 'Coupon Deleted',
+              text:result.message,
+              confirmButtonText: 'Okay'
+            }).then(async()=>{
+              window.location.reload();
+            })
+          }else{
+            console.error('Error while deleting coupon', error);
+            swal.fire({
+              icon:'error',
+              title: 'Error Deleting Coupon',
+              text: 'Failed to delete coupon',
+              confirmButtonText: 'Okay'
+            })
+          }
+        } catch (error) {
+          console.error('Error while deleting coupon', error);
+          swal.fire({
+            icon:'error',
+            title: 'Error Deleting Coupon',
+            text: 'Failed to fetch coupon information',
+            confirmButtonText: 'Okay'
+          })
+        }
+      });
+    });
+
+    //Update Coupon
+    document.querySelectorAll('.btn-update').forEach((button) => {
+      button.addEventListener('click', function () {
+        const couponId = this.getAttribute('data-id');
+        window.location.href = `/admin/coupon/update/${couponId}`;
+      });
+    });
+  </script>
+</body>
+
+</html>

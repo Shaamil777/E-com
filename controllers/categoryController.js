@@ -14,48 +14,33 @@ const loadCategoryManagement = async(req, res)=>{
 }
 
 const loadAddCategory = async(req, res)=>{
-    res.render('admin/addCategory');
+    res.render('admin/addCategory',{message:null});
 }
 
 const addCategory = async(req, res)=>{
- try{
-    const {categoryName,categoryDescription} = req.body;
-    
-    
-    if(!req.file){
-        return res.status(400).json({val:false, msg:"No image file was uploaded"});
+    const { categoryName } = req.body;
+    try {
+      const imagePath = path.relative(
+        path.join(__dirname, "..", "public"),
+        req.file.path
+      );
+      console.log(imagePath);
+      const category = await Category.findOne({ name: categoryName });
+      if (category) {
+        return res.status(200).json({ val: false, msg: "Category already exists" });
+      }
+      await Category.create({ name: categoryName, image: imagePath });
+      res.status(200).json({ val: true, msg: "Category added successfully" });
+    } catch (err) {
+      console.log(err);
+      res.status(200).json({ val: false, msg: "Category add failed" });
     }
-
-
-    const ImagePath = path.relative(path.join(__dirname, "..","public"),req.file.path);
-  
-  const category = new Category({
-    name: categoryName,
-    description: categoryDescription,
-    image: ImagePath,
-    createdAt: Date.now(),
-    isDeleted: false,
-    updatedAt: Date.now()
-  })
-
-  await category.save();
-
- return res.status(200).json({message: 'Category added successfully',category: category});
-}catch(error){
-    console.error('Error in adding category',error);
-    res.status(500).send('internal server error')
-}
-  
 
 }
 
 
 const loadUpdateCategory = async(req, res)=>{
     const categoryId = req.params.id;
-    console.log(categoryId);
-    
-    
-    
     try{
         const category = await Category.findById(categoryId);
         if(!category){
@@ -67,6 +52,57 @@ const loadUpdateCategory = async(req, res)=>{
         res.status(500).send('internal server error')
     }
 }
+
+
+
+async function categoryImageUpdate(req, res) {
+    console.log('dghd')
+    try {
+      const { categoryId } = req.params;
+      if (!req.file) {
+        return res
+          .status(400)
+          .json({ val: false, msg: "No file was uploaded" });
+      }
+      const filePath = path.relative(
+        path.join(__dirname, "..", "public"),
+        req.file.path
+      );
+      console.log("Category ID:", categoryId);
+      console.log("File Path:", filePath);
+      const category = await Category.findOne({ _id: categoryId });
+      if (!category) {
+        return res.status(404).json({ val: false, msg: "Category not found" });
+      }
+      category.image = filePath;
+      await category.save();
+      return res
+        .status(200)
+        .json({ val: true, msg: "Category image updated successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ val: false, msg: "Server error" });
+    }
+  }
+async function categoryUpdate(req, res) {
+  const { categoryId } = req.params;
+  const { categoryName } = req.body;
+
+  try {
+    const category = await Category.findOne({ _id: categoryId });
+    if (!category) {
+      return res.status(404).json({ val: false, msg: "Category not found" });
+    }
+    category.name = categoryName;
+    await category.save();
+    return res.status(200).json({ val: true, msg: "Category updated successfully" });
+  } catch (err) {
+    console.error("Error during category update:", err);
+    return res.status(500).json({ val: false, msg: "Server error" });
+  }
+}
+
+
 
 const updateCategory = async(req, res)=>{
     const {categoryName,categoryImage,categoryDescription,categoryId} = req.body;
@@ -153,4 +189,6 @@ module.exports ={
    loadDeletedCategory,
    deleteCategory,
    recoverCategory,
+   categoryUpdate,
+   categoryImageUpdate,
 }

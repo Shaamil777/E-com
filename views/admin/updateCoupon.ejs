@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Coupon Panel</title>
+  <link rel="stylesheet" href="/styles/usermanagement.css">
+  <style>
+    .swal2-icon {
+  margin: 0 auto !important; /* Center the icon */
+}
+.swal2-modal {
+  text-align: center !important; /* Ensure modal content is centered */
+}
+
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/adminSideBar') %>
+
+  <div class="container-fluid page-body-wrapper">
+    <nav class="navbar p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="navbar-nav w-100">
+          <li class="nav-item w-100"></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row p-3">
+      <div class="col-12 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Update Coupon</h4>
+            <form id="couponForm">
+              
+
+                <div class="form-group">
+                    <label for="validTo">Valid To</label>
+                    <input type="hidden" value="<%= coupon._id %>" id="couponId" class="form-control" >
+                  </div>
+              <div class="form-group">
+                <label for="validFrom">Valid From</label>
+                <input type="date" value="<%= coupon.validFrom.toISOString().split('T')[0] %>" id="validFrom" class="form-control" >
+              </div>
+              <div class="form-group">
+                <label for="validTo">Valid To</label>
+                <input type="date" value="<%= coupon.validUpto.toISOString().split('T')[0] %>" id="validTo" class="form-control" >
+              </div>
+              <div class="form-group">
+                <label for="discount">Discount (%)</label>
+                <input type="number" value="<%= coupon.discountPercentage %>" id="discount" class="form-control" placeholder="Enter Discount" >
+              </div>
+              <div class="form-group">
+                <label for="minPrice">Min Price</label>
+                <input type="number" value="<%=coupon.minPrice%>" id="minPrice" class="form-control" placeholder="Enter Minimum Price" >
+              </div>
+              <div class="form-group">
+                <label for="maxDisc">Max Discount</label>
+                <input type="number" value="<%=coupon.maxDiscount%>" id="maxDisc" class="form-control" placeholder="Enter Max Discount" >
+              </div>
+              <div class="form-group">
+                <label for="count">Count</label>
+                <input type="number" value="<%=coupon.couponCount%>" id="count" class="form-control" placeholder="Enter Count" >
+              </div>
+              <button type="submit" class="btn btn-success">Update Coupon</button>
+              <a href="/admin/couponmanagement" class="btn btn-danger">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    
+</body>
+
+</html>
+
+<script>
+    const form = document.getElementById('couponForm');
+    form.addEventListener('submit',async function(e){
+        e.preventDefault();
+
+        const validUpto = document.getElementById('validTo').value;
+        const validFrom = document.getElementById('validFrom').value
+        const discountPercentage = document.getElementById('discount').value;
+        const couponId = document.getElementById('couponId').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxDiscount = document.getElementById('maxDisc').value
+        const count = document.getElementById('count').value
+
+        if(validUpto < validFrom){
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Date',
+                text: 'Valid To should be greater than Valid From'
+            })
+            return;
+        }
+
+        if(isNaN(discountPercentage)||discountPercentage <=0 || discountPercentage > 100){
+            swal.fire({
+                icon: 'error',
+                title: 'Invalid Discount',
+                text: 'Discount should be a positive number and less than or equal to 100',
+            });
+            return;
+        }if(isNaN(minPrice)||minPrice<0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Min Price',
+                text: 'Min Price should be a non-negative number',
+            });
+            return;
+        }if(isNaN(maxDiscount)|| maxDiscount < 0){
+            swal.fire({
+                icon: 'error',
+                title: 'Invalid Max Discount',
+                text: 'Max Discount should be a non-negative number',
+            })
+            return;
+        }
+        if(isNaN(count)||count<=0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Count',
+                text: 'Count should be a positive number',
+            })
+            return;
+        }
+
+
+        const couponData = {
+            validUpto,
+            couponId,
+            validFrom,
+            discountPercentage,
+            minPrice,
+            maxDiscount,
+            count
+        };
+
+        try {
+            const response = await fetch('/admin/coupon/update',{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(couponData)
+            })
+            const data = await response.json();
+            if(data.success){
+                swal.fire({
+                    icon:'success',
+                    title: 'Coupon Updated Successfully',
+                    text: data.message,
+                    confirmButtonText:'Ok'
+                }).then(()=>{
+                    window.location.href = '/admin/couponmanagement'
+                })
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                    confirmButtonText:'Ok'
+                })
+            }
+        } catch (error) {
+            console.error('Error updating coupon:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while updating the coupon',
+                confirmButtonText:'Ok'
+            }) 
+        }
+    })
+</script>

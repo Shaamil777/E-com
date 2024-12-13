@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Coupon Panel</title>
+  <link rel="stylesheet" href="/styles/usermanagement.css">
+  <style>
+    .swal2-icon {
+  margin: 0 auto !important; /* Center the icon */
+}
+.swal2-modal {
+  text-align: center !important; /* Ensure modal content is centered */
+}
+
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/adminSideBar') %>
+
+  <div class="container-fluid page-body-wrapper">
+    <nav class="navbar p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+      </div>
+      <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="navbar-nav w-100">
+          <li class="nav-item w-100"></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row p-3">
+      <div class="col-12 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Add New Coupon</h4>
+            <form id="couponForm">
+              <div class="form-group">
+                <label for="couponCode">Coupon Code</label>
+                <input type="text" id="couponCode" class="form-control" placeholder="Enter Coupon Code" >
+              </div>
+              <div class="form-group">
+                <label for="validFrom">Valid From</label>
+                <input type="date" id="validFrom" class="form-control" >
+              </div>
+              <div class="form-group">
+                <label for="validTo">Valid To</label>
+                <input type="date" id="validTo" class="form-control" >
+              </div>
+              <div class="form-group">
+                <label for="discount">Discount (%)</label>
+                <input type="number" id="discount" class="form-control" placeholder="Enter Discount" >
+              </div>
+              <div class="form-group">
+                <label for="minPrice">Min Price</label>
+                <input type="number" id="minPrice" class="form-control" placeholder="Enter Minimum Price" >
+              </div>
+              <div class="form-group">
+                <label for="maxDisc">Max Discount</label>
+                <input type="number" id="maxDisc" class="form-control" placeholder="Enter Max Discount" >
+              </div>
+              <div class="form-group">
+                <label for="count">Count</label>
+                <input type="number" id="count" class="form-control" placeholder="Enter Count" >
+              </div>
+              <button type="submit" class="btn btn-success">Create Coupon</button>
+              <a href="/admin/couponmanagement" class="btn btn-danger">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+//    
+</body>
+
+</html>
+<script>
+    const form = document.getElementById('couponForm');
+    form.addEventListener('submit',async function(e){
+        e.preventDefault();
+        const couponCode = document.getElementById('couponCode').value.trim();
+        const validFrom = document.getElementById('validFrom').value;
+        const validTo = document.getElementById('validTo').value;
+        const discount = document.getElementById('discount').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxDisc = document.getElementById('maxDisc').value
+        const count = document.getElementById('count').value;
+
+
+        if(!couponCode){
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing Information',
+            text: 'Coupon Code is required!',
+            confirmButtonText: 'Okay',
+            timer:3000,
+            backdrop: true,
+          });
+          return;
+        }
+        if(!validFrom || !validTo){
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Both Valid From and Valid To dates are required!',
+            confirmButtonText: 'OK',
+        });
+        return;
+        }
+        if(new Date(validFrom)>new Date(validTo)){
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Dates',
+            text: 'Valid From date cannot be later than Valid To date!',
+            confirmButtonText: 'OK',
+        });
+        return;
+        }
+        if(isNaN(discount)||discount<=0||discount>100){
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Discount',
+            text: 'Discount must be a percentage between 1 and 100!',
+            confirmButtonText: 'OK',
+        });
+        return;
+        }
+        if(isNaN(minPrice)||minPrice<0){
+          swal.fire({
+            icon:'error',
+            title:'Enter minimum price',
+            text: 'Minimum price must be a positive number!',
+            confirmButtonText: 'OK',
+          })
+          return;
+        }
+        if(isNaN(maxDisc)||maxDisc<0){
+          swal.fire({
+            icon:'error',
+            title:'Enter minimum price',
+            text: 'Minimum price must be a positive number!',
+            confirmButtonText: 'OK',
+          })
+          return;
+        }
+        if(isNaN(count)||count<=0){
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Count',
+            text: 'Count must be a positive number!',
+            confirmButtonText: 'OK',
+        });
+        return;
+        }
+
+        const couponData = {
+          couponCode,
+          validFrom,
+          validTo,
+          discount,
+          minPrice,
+          maxDisc,
+          count
+        };
+
+        try{
+          const response = await fetch('/admin/coupon/add',{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(couponData)
+          })
+
+
+          const result = await response.json();
+
+          if(result.success){
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: result.message,
+                confirmButtonText: 'OK',
+            }).then(()=>{
+            window.location.href = '/admin/couponmanagement'
+          })
+          }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed',
+                text: result.message ,
+                confirmButtonText: 'OK',
+            });
+          }
+        }catch(error){
+          console.error('Error occured while creating coupon',error);
+          swal.fire({
+            icon:'error',
+            title:'Error',
+            text:'An error occured while creating coupon',
+            confirmButtonText:'OK',
+          })
+        }
+    })
+</script>

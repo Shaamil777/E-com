@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Form</title>
+    <title>URBANWORN</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Add the background image */
-       body{
-        background-color: #343e52;
-       }
+        body {
+            background-color: #343e52;
+        }
 
         .back-arrow {
             position: absolute;
@@ -89,6 +88,7 @@
             <div class="form-container p-4">
                 <span class="back-arrow">←</span>
                 <form id="form" method="post" action="/register/Verify">
+                    <input type="hidden" id="userEmail" name="email" value="<%= email %>">
                     <h1>Verify Your Account!!</h1>
                     <p>The One-Time Password has been sent to your corresponding email. Please enter your OTP.</p>
                     <div class="form-group">
@@ -96,10 +96,11 @@
                     </div>
                     <button type="submit" class="btn btn-dark w-100" style="margin-bottom: 10px;">Verify</button>
                     <div>
-                        <p id="timer">Resend OTP in <span id="countDown">30</span> Seconds
-                        </p>
-                    <a  href="#" class="d-block text-center mt-3"><p id="resendLink" style="display: none;" onclick="startCounter()">Resend OTP?</p></a>
-                </div>
+                        <p id="timer">Resend OTP in <span id="countDown">30</span> Seconds</p>
+                        <a class="d-block text-center mt-3">
+                            <p id="resendLink" style="display: none;" onclick="startCounter()">Resend OTP?</p>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -109,30 +110,67 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let countdownInterval;
+        let countValue = 59;
+
+        function startCounter() {
+            // Reset the counter when OTP is resent
+            countValue = 59;  // Reset the counter to 30 seconds
+            document.getElementById('countDown').textContent = countValue;
+            document.getElementById('timer').style.display = "block";
+            document.getElementById('resendLink').style.display = "none";
+
+            // Start the countdown
+            countdownInterval = setInterval(() => {
+                countValue--;
+                document.getElementById('countDown').textContent = countValue;
+
+                if (countValue <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('timer').style.display = "none";
+                    document.getElementById('resendLink').style.display = "block";
+                }
+            }, 1000);
+        }
+
+        // Initialize the timer when the page loads
+        window.onload = function() {
+            startCounter();  // Start the countdown when the page loads
+        };
+
+        document.getElementById("resendLink").addEventListener('click', async function () {
+            try {
+                const resendLink = document.getElementById('resendLink');
+                resendLink.textContent = "Resending OTP...";
+                resendLink.style.pointerEvents = "none";
+
+                const userEmail = document.getElementById('userEmail').value                // Example of how to make an API request to resend OTP
+                const response = await fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email:userEmail })  // Assuming you have the user's email
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                    startCounter();  // Restart the countdown on OTP resend
+                } else {
+                    alert(data.error || "Error occurred while resending OTP");
+                }
+
+            } catch (error) {
+                console.error('Error resending OTP:', error);
+                alert('An error occurred while resending OTP');
+            } finally {
+                resendLink.textContent = "Resend OTP?";
+                resendLink.style.pointerEvents = "auto";
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-<script>
-
-    function startCounter(){
-    let countValue = 30;
-    let countElement = document.getElementById('countDown')
-    const timer = document.getElementById('timer')
-    const resendLink = document.getElementById('resendLink')
-
-
-
-    const countdownintervel = setInterval(()=>{
-        countValue--;
-        countElement.textContent=countValue;
-
-        if(countValue<=0){
-            clearInterval(countdownintervel)
-            timer.style.display="none";
-            resendLink.style.display="block"
-        }
-    },1000)
-}
-
-</script>

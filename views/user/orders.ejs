@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/user.css">
+
+    <title>Ecommerce Website</title>
+    
+    <style>
+.cancel__order:hover {
+  background-color: darkred; /* Darker red on hover */
+}
+
+      .placed__order-table {
+        width: 100%;
+        border-collapse: separate; /* Enables spacing and border radius */
+        border-spacing: 0; /* Removes extra gaps between cells */
+        border-radius: 15px; /* Makes the table curved */
+        overflow: hidden; /* Ensures curved edges are visible */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
+      }
+    
+      .placed__order-table thead {
+        background-color: rgba(54, 50, 50, 0.507);
+        color: #fff;
+      }
+    
+      .placed__order-table th,
+      .placed__order-table td {
+        padding: 10px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd; /* Row divider */
+      }
+    
+      .placed__order-table tbody tr:last-child td {
+        border-bottom: none; /* Removes last row's bottom border */
+      }
+    
+      .placed__order-table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.05); /* Adds a hover effect */
+      }
+    
+      .placed__order-table button {
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+      }
+    
+      .placed__order-table button:hover {
+        opacity: 0.9; /* Slight dim effect on hover */
+        transform: scale(1.05); /* Grows button on hover */
+      }
+    
+      .view__order {
+        text-decoration: none;
+        font-weight: bold;
+      }
+    
+      .cancel__order {
+        text-decoration: none;
+      }
+
+   
+      /* Return Form Container */
+.return-form-container {
+  background-color: #fff; /* White background */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
+  width: 100%;
+  max-width: 400px; /* Limit width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  margin: 20px auto; /* Center the form */
+  text-align: center;
+}
+
+/* Heading */
+.return-form-container h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Textarea for return reason */
+.return-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  min-height: 100px; /* Set height of the textarea */
+  resize: vertical; /* Allow vertical resize */
+}
+
+/* Button container */
+.return-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Send Button */
+.send-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.send-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Cancel Button */
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+    </style>
+
+  </head>
+  <body>
+
+    <!--================ HEADER =================-->
+
+    <%- include('../partials/userHeader') %>
+
+    <main class="main">
+        <!--=============== BREADCRUMB ===============-->
+        <section class="breadcrumb">
+          <ul class="breadcrumb__list flex container">
+            <li><a href="/home" class="breadcrumb__link">Home</a></li>
+            <li><span class="breadcrumb__link">></span></li>
+            <li><span class="breadcrumb__link">Account</span></li>
+          </ul>
+        </section>
+    
+        <!--=============== ACCOUNTS ===============-->
+        <section class="accounts section--lg">
+          <div class="accounts__container container grid">
+            <div class="account__tabs">
+                <p id="dashboard" class="account__tab " data-target="#dashboard">
+                    <i class="fi fi-rs-settings-sliders"></i> Profile
+                  </p>
+               
+                  <p id="orders" class="account__tab active-tab" data-target="#orders">
+                    <i  class="fi fi-rs-shopping-bag"></i> Orders
+                  </p>
+                  <p id="updateProfile" class="account__tab  " data-target="#update-profile">
+                    <i class="fi fi-rs-user"></i> Update Profile
+                  </p>
+                  <p id="wallet" class="account__tab" data-target="#wallet">
+                    <i class="fi fi-rs-wallet"></i> Wallet
+                  </p>
+                  <p id="address" class="account__tab " data-target="#address">
+                    <i class="fi fi-rs-marker"></i> My Address
+                  </p>
+                  <p id="changePassword" class="account__tab " data-target="#change-password">
+                    <i class="fi fi-rs-settings-sliders"></i> Change Password
+                  </p>
+                  <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
+                </div>
+    
+
+  
+           
+
+
+                <div class="tabs__content">
+                  <div class="tab__content border-0 " id="orders">
+                    <h3 class="tab__header bg-info">Your Orders</h3>
+                    <div class="tab__body">
+                     
+                      <table class="placed__order-table">
+                        <thead style="background-color: rgba(54, 50, 50, 0.507);">
+                          <tr>
+                            <th>Orders</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Totals</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (orders && orders.length > 0) { %>
+                            <% orders.forEach(function(order, index) { %>
+                              <tr>
+                                <td>#<%= order._id %></td>
+                                <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+                                <td><%= order.status %></td>
+                                <td>&#8377;<%= order.totalAmount %></td>
+                                <td><%=order.paymentMethod%></td>
+                                <td>
+                                  <button class="mb-2 rounded-pill" style="width: 10vw; background-color: lightblue;">
+                                    <a href="/orders/<%= order._id %>/vieworder" class="view__order text-dark">View</a>
+                                  </button>
+                                
+                                  <!-- Cancel button for Pending orders (both status and payment status are pending or payment completed) -->
+                                  <% if (order.status === 'Pending') { %>
+                                    <button class="bg-danger rounded-pill" style="width: 10vw;">
+                                      <a href="/orders/<%= order._id %>/cancelorder" class="cancel__order text-light">Cancel</a>
+                                    </button>
+                                  <% } %>
+                                
+                                  <!-- Return button for Completed orders with Completed payment status -->
+                                  <% if (order.status === 'Completed' && order.paymentStatus === 'Completed') { %>
+                                    <button  class="bg-success rounded-pill" style="width: 10vw;">
+                                      <a data-id="<%= order._id %>" id="return" href="/orders/<%= order._id %>/returnorder" class="return__order text-light" >Return</a>
+                                    </button>
+                                  <% } %>
+                                </td>
+                                
+                                
+                              </tr>
+                            <% }); %>
+                          <% } else { %>
+                            <tr>
+                              <td colspan="6" class="text-center">No orders found.</td> 
+                            </tr>
+                          <% } %>
+                        </tbody>
+                      </table>
+                      <div id="returnFormContainer" class="return-form-container">
+                        <h4>Return Request</h4>
+                        <form id="returnForm">
+                          <!-- Hidden input for order ID -->
+                          <input type="hidden" id="orderId" name="orderId">
+                          <textarea id="returnReason" name="reason" class="return-input" placeholder="Enter reason for return" required></textarea>
+                          <div class="return-actions">
+                            <button type="submit" id="sendReturn" class="btn-action send-btn">Send</button>
+                            <button type="button" id="cancelReturn" class="btn-action cancel-btn">Cancel</button>
+                          </div>
+                        </form>
+                      </div>
+                      
+                      
+                    </div>
+                  </div>
+                </div>      
+    </div>
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+      <%- include('../partials/userFooter') %>
+
+  </body>
+  </html>
+
+  <script>
+    document.getElementById('dashboard').addEventListener('click', function(){
+        window.location.href = '/profile'
+    })
+
+    document.getElementById('orders').addEventListener('click', function(){
+        window.location.href = '/orders'
+    })
+
+    document.getElementById('updateProfile').addEventListener('click', function(){
+        window.location.href = '/updateprofile'
+    })
+
+    document.getElementById('wallet').addEventListener('click', function(){
+        window.location.href = '/wallet'
+    })
+
+    document.getElementById('address').addEventListener('click', function(){
+        window.location.href = '/address'
+    })
+
+    document.getElementById('changePassword').addEventListener('click', function(){
+        window.location.href = '/changepassword'
+    })
+
+    document.getElementById('logout').addEventListener('click',function(){
+      window.location.href = '/logout'
+    })
+</script>
+<script>
+  // Apply color styling based on order status
+  document.addEventListener("DOMContentLoaded", function () {
+    const rows = document.querySelectorAll(".placed__order-table tbody tr");
+
+    rows.forEach((row) => {
+      const statusCell = row.querySelector("td:nth-child(3)"); // Get the status cell
+      if (statusCell) {
+        const statusText = statusCell.textContent.trim().toLowerCase();
+
+        switch (statusText) {
+          case "Rejected":
+            statusCell.style.color = "red"; // Rejected status is red
+            break;
+          case "requested":
+          statusCell.style.color = "red"; // Requested status is red
+          break;
+        case "returned":
+          statusCell.style.color = "green"; // Returned status is green
+          break;
+          case "pending":
+            statusCell.style.color = "orange";
+            break;
+          case "cancelled":
+            statusCell.style.color = "red";
+            break;
+          case "completed":
+            statusCell.style.color = "green";
+            break;
+          default:
+            statusCell.style.color = "black"; // Default for unknown status
+        }
+      }
+    });
+  });
+
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Check for 'cancelled' query parameter in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const cancelled = urlParams.get('cancelled');
+    
+    // Show an alert if the order was successfully cancelled
+    if (cancelled) {
+      alert("Your order has been successfully cancelled.");
+      window.location.href = '/orders'
+    }
+  });
+</script>
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  const returnFormContainer = document.getElementById("returnFormContainer");
+
+  // Hide the return form initially
+  returnFormContainer.style.display = "none";
+
+  const returnButtons = document.querySelectorAll(".return__order");
+  const sendButton = document.getElementById("sendReturn");
+  const cancelButton = document.getElementById("cancelReturn");
+
+  // Show the input box on Return button click
+  returnButtons.forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent navigation
+      returnFormContainer.style.display = "block"; // Show return form
+
+      // Set the order ID in the hidden input field when Return is clicked
+      const orderId = button.getAttribute("data-id");
+      document.getElementById("orderId").value = orderId;
+    });
+  });
+
+  // Handle the Cancel button
+  cancelButton.addEventListener("click", function () {
+    returnFormContainer.style.display = "none"; // Hide the form
+    document.getElementById("returnReason").value = ""; // Clear the input
+  });
+
+  // Handle the form submission
+  sendButton.addEventListener("click", async function (e) {
+    e.preventDefault(); // Prevent form submission from reloading the page
+
+    const reason = document.getElementById("returnReason").value.trim();
+    if (reason.length === 0) {
+      swal.fire({
+        title: "Error",
+        text: "Please enter a reason for return",
+        icon: "error",
+        confirmButtonText: "Okay"
+      });
+      return;
+    }
+
+    const orderId = document.getElementById("orderId").value;
+
+    // Send return request
+    try {
+      const response = await fetch(`/orders/${orderId}/returnorder`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ reason: reason })
+      });
+
+      const result =  await response.json()
+
+      if (result.success) {
+        swal.fire({
+          title: "Success",
+          text: result.message,
+          icon: "success",
+          confirmButtonText: "Okay"
+        }).then(() => {
+          // Optionally, reload the page or hide the return form
+          window.location.reload();
+        });
+      } else {
+        swal.fire({
+          title: "Error",
+          text: result.message,
+          icon: "error",
+          confirmButtonText: "Okay"
+        });
+      }
+    } catch (error) {
+      swal.fire({
+        title: "Error",
+        text: "An error occurred while processing your return request",
+        icon: "error",
+        confirmButtonText: "Okay"
+      });
+    }
+  });
+});
+
+</script>
+

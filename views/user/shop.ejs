@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>EShopper - Bootstrap Shop Template</title>
+    <title>URBANWORN</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -49,118 +49,43 @@
             <!-- Shop Sidebar Start -->
             <div class="col-lg-3 col-md-12">
                 <!-- Price Start -->
-                <div class="border-bottom mb-4 pb-4">
-                    <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
-                            <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">$0 - $100</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5">$400 - $500</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div>
+               <!-- Price Filter Sidebar -->
+                
+<div class="border-bottom mb-4 pb-4">
+    <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
+    <select class="form-control" id="price-filter">
+        <option value="all" selected>All</option>
+        <option value="low-to-high" >Low to High</option>
+        <option value="high-to-low">High to Low</option>
+    </select>
+    
+</div>
+
                 <!-- Price End -->
                 
-                <!-- Color Start -->
+                <!-- Category Start -->
                 <div class="border-bottom mb-4 pb-4">
-                    <h5 class="font-weight-semi-bold mb-4">Filter by color</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">All Color</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-1">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">White</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
+                    <h5 class="font-weight-semi-bold mb-4">Filter by Category</h5>
+                    <select class="form-control" id="category-filter">
+                        <option value="all" selected>All Category (1000)</option>
+                        <option value="mens">Mens (4)</option>
+                        <option value="womens">Womens (4)</option>
+                        <option value="pants">Pants (4)</option>
+                    </select>
                 </div>
-                <!-- Color End -->
+                <!-- Category End -->
 
-                <!-- Size Start -->
+                <!-- Alphabet Start -->
                 <div class="mb-5">
-                    <h5 class="font-weight-semi-bold mb-4">Filter by size</h5>
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="size-all">
-                            <label class="custom-control-label" for="size-all">All Size</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-1">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-2">
-                            <label class="custom-control-label" for="size-2">S</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-3">
-                            <label class="custom-control-label" for="size-3">M</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-4">
-                            <label class="custom-control-label" for="size-4">L</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="size-5">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
+                    <h5 class="font-weight-semi-bold mb-4">Filter by Alphabet</h5>
+                    <select class="form-control" id="alphabet-filter">
+                        <option value="all" selected>All (1000)</option>
+                        <option value="Aa-Zz">Aa-Zz (12)</option>
+                        <option value="Zz-Aa">Zz-Aa (12)</option>
+                    </select>
                 </div>
-                <!-- Size End -->
+           
+                <!-- Alphabet End -->
             </div>
             <!-- Shop Sidebar End -->
 
@@ -205,7 +130,7 @@
                                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                     <h6 class="text-truncate mb-3"><%= product.name %></h6>
                                     <div class="d-flex justify-content-center">
-                                        <h6>$<%= product.price %></h6>
+                                        <h6>&#8377;<%= product.price %></h6>
                                         <% if (product.originalPrice) { %>
                                             <h6 class="text-muted ml-2"><del>$<%= product.originalPrice %></del></h6>
                                             <% } %>
@@ -274,3 +199,61 @@
 </body>
 
 </html>
+<script>
+    $(document).ready(function () {
+    // Attach change event listeners to filters
+    $('#price-filter, #category-filter, #alphabet-filter').on('change', function () {
+        // Get selected filter values
+        const priceOrder = $('#price-filter').val();
+        const category = $('#category-filter').val();
+        const alphabetOrder = $('#alphabet-filter').val();
+
+        // Send AJAX request to fetch filtered products
+        $.ajax({
+            url: '/api/products',
+            method: 'GET',
+            data: {
+                category: category,
+                priceOrder: priceOrder,
+                alphabetOrder: alphabetOrder
+            },
+            success: function (response) {
+                // Update product list with the fetched data
+                renderProducts(response);
+            },
+            error: function (err) {
+                console.error('Error fetching products:', err);
+            }
+        });
+    });
+
+    // Function to render products
+    function renderProducts(products) {
+        const productContainer = $('.row.pb-3');
+        productContainer.empty(); // Clear existing products
+
+        products.forEach(product => {
+            const productHTML = `
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                    <div class="card product-item border-0 mb-4">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <a href="/itemDetail/${product.id}">
+                                <img class="img-fluid w-100" src="/${product.image[0]}" alt="${product.name}">
+                            </a>
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">${product.name}</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>&#8377;${product.price}</h6>
+                                ${product.originalPrice ? `<h6 class="text-muted ml-2"><del>$${product.originalPrice}</del></h6>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            productContainer.append(productHTML);
+        });
+    }
+});
+
+</script>

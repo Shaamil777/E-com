@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/user.css">
+
+    <title>Ecommerce Website</title>
+  </head>
+  <body>
+
+    <!--================ HEADER =================-->
+
+    <%- include('../partials/userHeader') %>
+
+    <main class="main">
+        <!--=============== BREADCRUMB ===============-->
+        <section class="breadcrumb">
+          <ul class="breadcrumb__list flex container">
+            <li><a href="/home" class="breadcrumb__link">Home</a></li>
+            <li><span class="breadcrumb__link">></span></li>
+            <li><a href="/orders" class="breadcrumb__link">Orders</a></li>
+            <li><span class="breadcrumb__link">></span></li>
+            <li><span class="breadcrumb__link">Details</span></li>
+          </ul>
+        </section>
+    
+        <!--=============== ACCOUNTS ===============-->
+        <section class="accounts section--lg">
+          <div class="accounts__container container grid">
+            <div class="account__tabs">
+                <p id="dashboard" class="account__tab " data-target="#dashboard">
+                    <i class="fi fi-rs-settings-sliders"></i> Profile
+                  </p>
+               
+                  <p id="orders" class="account__tab active-tab" data-target="#orders">
+                    <i  class="fi fi-rs-shopping-bag"></i> Orders
+                  </p>
+                  <p id="updateProfile" class="account__tab  " data-target="#update-profile">
+                    <i class="fi fi-rs-user"></i> Update Profile
+                  </p>
+                  <p id="wallet" class="account__tab" data-target="#wallet">
+                    <i class="fi fi-rs-wallet"></i> Wallet
+                  </p>
+                  <p id="address" class="account__tab " data-target="#address">
+                    <i class="fi fi-rs-marker"></i> My Address
+                  </p>
+                  <p id="changePassword" class="account__tab " data-target="#change-password">
+                    <i class="fi fi-rs-settings-sliders"></i> Change Password
+                  </p>
+                  <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="tabs__content">
+                    <div class="tab__content" id="orders">
+                      <h3 class="tab__header">Your Order Details</h3>
+                      <div class="tab__body">
+                        <table class="placed__order-table">
+                          <thead>
+                            <tr>
+                                <th>Product Name</th>
+                              <th>Product Image</th>
+                              <th>Quantity</th>
+                              <th>Price</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% if (order && order.orderItems.length > 0) { %>
+                              <% order.orderItems.forEach(function(item) { %>
+                                <tr>
+                                  <td>
+                                    <%= item.productId.name %>
+                                  </td>
+                                  <td><img style="width: 60px; height: 60px; object-fit: contain; border-radius: 5px;" src="/<%= item.productId.image[0] %>" alt="<%= item.productId.name %>" class="product__image" />
+                                    
+                                   </td>
+                                  <td><%= item.quantity %></td>
+                                  <td>₹<%= item.price.toFixed(2) %></td>
+                                </tr>
+                              <% }); %>
+                            <% } else { %>
+                              <tr>
+                                <td colspan="4" class="text-center">No products found in this order.</td>
+                              </tr>
+                            <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                      </div>
+
+                      <div class="tab__content" id="shipping-address">
+                        <h3 class="tab__header">Shipping Address</h3>
+                        <div class="tab__body">
+                          <% if (order && order.addressId) { %>
+                            <p><strong>House Name:</strong> <%= order.addressId.housename %></p>
+                            <p><strong>Country:</strong> <%= order.addressId.country %></p>
+                            <p><strong>State:</strong> <%= order.addressId.state %></p>
+                            <p><strong>District:</strong> <%= order.addressId.district %></p>
+                            <p><strong>City:</strong> <%= order.addressId.city %></p>
+                            <p><strong>Pincode:</strong> <%= order.addressId.pincode %></p>
+                          <% } else { %>
+                            <p>No shipping address available for this order.</p>
+                          <% } %>
+                        </div>
+                      </div>
+
+
+                     </div>                    
+                    </div>
+                  </div>
+                  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <%- include('../partials/userFooter') %>
+
+            </body>
+            </html>
+          
+            <script>
+              document.getElementById('dashboard').addEventListener('click', function(){
+                  window.location.href = '/profile'
+              })
+          
+              document.getElementById('orders').addEventListener('click', function(){
+                  window.location.href = '/orders'
+              })
+          
+              document.getElementById('updateProfile').addEventListener('click', function(){
+                  window.location.href = '/updateprofile'
+              })
+          
+              document.getElementById('wallet').addEventListener('click', function(){
+                  window.location.href = '/wallet'
+              })
+          
+              document.getElementById('address').addEventListener('click', function(){
+                  window.location.href = '/address'
+              })
+          
+              document.getElementById('changePassword').addEventListener('click', function(){
+                  window.location.href = '/changepassword'
+              })
+
+              document.getElementById('logout').addEventListener('click',function(){
+      window.location.href = '/logout'
+    })
+          </script>

@@ -8,11 +8,18 @@ function generateOtp(){
 async function createAndSendOtp(email) {
     
 
-const otp = generateOtp()
+const otp = generateOtp();
 
-const otpInstance = new OTP({email,otp})
+
+
+
 
 try {
+
+    await OTP.deleteMany({email})
+
+    const otpInstance = new OTP({email,otp})
+
     await otpInstance.save()
 
     await sentOtpEmail(email,otp);

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Form</title>
+    <title>URBANWORN</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/styles/user.css">
@@ -70,141 +70,35 @@
             width: 20px;
             height: 20px;
         }
+
+        /* Header styles */
+        .header {
+            background-color: #EDF1FF;
+            color: rgb(0, 0, 0);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header a {
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- Topbar Start -->
-<div class="container-fluid">
-    <div class="row bg-secondary py-2 px-xl-5">
-        <div class="col-lg-6 d-none d-lg-block">
-            <div class="d-inline-flex align-items-center">
-                <a class="text-dark" href="">FAQs</a>
-                <span class="text-muted px-2">|</span>
-                <a class="text-dark" href="">Help</a>
-                <span class="text-muted px-2">|</span>
-                <a class="text-dark" href="">Support</a>
-            </div>
-        </div>
-        <div class="col-lg-6 text-center text-lg-right">
-            <div class="d-inline-flex align-items-center">
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a class="text-dark px-2" href="">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a class="text-dark pl-2" href="">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-        </div>
+     <!-- Simple Header -->
+     <div class="header">
+        <div class="brand-name">URBANWORN</div>
+        <div class="return-home"><a href="/home">Return to Home</a></div>
     </div>
-    <div class="row align-items-center py-3 px-xl-5">
-        <div class="col-lg-3 d-none d-lg-block">
-            <a href="" class="text-decoration-none">
-                <h1 class="m-0 display-5 font-weight-semi-bold">UrbanWorn</h1>
-            </a>
-        </div>
-        <div class="col-lg-6 col-6 text-left">
-            <form action="">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for products">
-                    <div class="input-group-append">
-                        <span class="input-group-text bg-transparent text-primary">
-                            <i class="fa fa-search"></i>
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-3 col-6 text-right">
-            <a href="" class="btn border">
-                <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-            <a href="" class="btn border">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-        </div>
-    </div>
-</div>
-<!-- Topbar End -->
-
-
-<!-- Navbar Start -->
-<div class="container-fluid mb-5">
-    <div class="row border-top px-xl-5">
-        <div class="col-lg-3 d-none d-lg-block">
-            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                <h6 class="m-0">Categories</h6>
-                <i class="fa fa-angle-down text-dark"></i>
-            </a>
-            <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
-                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i class="fa fa-angle-down float-right mt-1"></i></a>
-                        <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                            <a href="" class="dropdown-item">Men's Dresses</a>
-                            <a href="" class="dropdown-item">Women's Dresses</a>
-                            <a href="" class="dropdown-item">Baby's Dresses</a>
-                        </div>
-                    </div>
-                    <a href="" class="nav-item nav-link">Shirts</a>
-                    <a href="" class="nav-item nav-link">Jeans</a>
-                    <a href="" class="nav-item nav-link">Swimwear</a>
-                    <a href="" class="nav-item nav-link">Sleepwear</a>
-                    <a href="" class="nav-item nav-link">Sportswear</a>
-                    <a href="" class="nav-item nav-link">Jumpsuits</a>
-                    <a href="" class="nav-item nav-link">Blazers</a>
-                    <a href="" class="nav-item nav-link">Jackets</a>
-                    <a href="" class="nav-item nav-link">Shoes</a>
-                </div>
-            </nav>
-        </div>
-        <div class="col-lg-9">
-            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                <a href="" class="text-decoration-none d-block d-lg-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
-                </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav mr-auto py-0">
-                        <a href="index.html" class="nav-item nav-link ">Home</a>
-                        <a href="shop.html" class="nav-item nav-link">Shop</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="cart.html" class="dropdown-item">Shopping Cart</a>
-                                <a href="checkout.html" class="dropdown-item">Checkout</a>
-                            </div>
-                            
-                        </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="shop.html" class="nav-item nav-link">About</a>
-                        <a href="shop.html" class="nav-item nav-link">My Account</a>
-                    </div>
-                    
-                    <div class="navbar-nav ml-autopy-0 ">
-                       <a class="text-dark" href="/signup">Login/Register</a>
-                    </div>
-                </div>
-            </nav>
-            
-        </div>
-    </div>
-</div>
-<!-- Navbar End -->
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="form-container col-md-6 col-lg-4">
@@ -215,21 +109,27 @@
                 <div class="form-group">
                     <input id="username" name="username" type="text" class="form-control" placeholder="Name">
                 </div>
+                <p id="nameErr" style="color: red;"></p>
                 <div class="form-group">
                     <input id="email" name="email" type="email" class="form-control" placeholder="Email address">
                 </div>
+                <p id="emailErr" style="color: red;"></p>
+
                 <div class="form-group">
                     <input id="phone" name="phone" type="tel" class="form-control" placeholder="Phone">
                 </div>
+                <p id="phoneErr" style="color: red;"></p>
                 <div class="form-group">
                     <input id="password" name="password" type="password" class="form-control" placeholder="Password">
                 </div>
+                <p id="passwordErr" style="color: red;"></p>
                 <div class="form-group">
                     <input id="conpassword" type="password" class="form-control" placeholder="Confirm Password">
                 </div>
+                <p id="conpasswordErr" style="color: red;"></p>
 
 
-                <p id="errmsg" style="color: red; display: none;"></p>
+               
 
 
                 <% if (message) { %>
@@ -237,10 +137,6 @@
                 <% } %>
 
 
-                <div class="form-check">
-                    <input id="policybtn" type="checkbox" class="form-check-input" id="terms">
-                    <label class="form-check-label" for="terms">I agree to the terms & policy</label>
-                </div>
                 <button id="submit" type="submit" class="btn btn-dark btn-block">Register</button>
                 <div class="divider">Or</div>
 
@@ -253,7 +149,7 @@
                 </div>
 
                 <div class="text-center mt-3">
-                    Have an account? <a href="login.html">Sign in</a>
+                    Have an account? <a href="/login">Sign in</a>
                 </div>
             </form>
         </div>
@@ -273,10 +169,11 @@
 
 <script>
 
-
+    const form = document.getElementById('form');
     form.addEventListener('submit', (e) => {
-        if (!validi) {
+        if (!validi()) {
             e.preventDefault();
+            
         }else{
             const submitButton = document.getElementById('submit');
             submitButton.disabled = true;
@@ -291,105 +188,76 @@
     })
 
     function validi() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const conpassword = document.getElementById('conpassword').value;
 
-        const form = document.querySelector('form')
-        const username = document.getElementById('username').value
-        const email = document.getElementById('email').value
-        const phone = document.getElementById('phone').value
-        const password = document.getElementById('password').value
-        const conpassword = document.getElementById('conpassword').value
-        const err = document.getElementById('errmsg')
-        const btn = document.getElementById('policybtn')
+    const nameErr = document.getElementById('nameErr');
+    const emailErr = document.getElementById('emailErr');
+    const phoneErr = document.getElementById('phoneErr');
+    const passwordErr = document.getElementById('passwordErr');
+    const conpasswordErr = document.getElementById('conpasswordErr');
 
+    // Regex patterns
+    const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const phonePattern = /^\d{10}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        //regex patterns
+    // Reset error messages
+    nameErr.textContent = '';
+    emailErr.textContent = '';
+    phoneErr.textContent = '';
+    passwordErr.textContent = '';
+    conpasswordErr.textContent = '';
 
-        const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        const phonePattern = /^\d{10}$/;
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // Flag to track validation status
+    let isValid = true;
 
-
-        //validation
-
-        if (!usernamePattern.test(username)) {
-            err.style.display = "block";
-            err.textContent = "Username is invalid. It must be 4 characters long, containing only letters, numbers.";
-            setTimeout(() => {
-                err.style.display = "none"
-            }, 3000)
-            return false
-        }
-
-
-        else if (!emailPattern.test(email)) {
-            err.style.display = "block";
-            err.textContent = "Please enter a valid email address."
-            setTimeout(() => {
-                err.style.display = "none"
-            }, 3000)
-            return false
-
-        }
-
-
-        else if (!phonePattern.test(phone)) {
-            err.style.display = "block";
-            err.textContent = "Phone number must contain exactly 10 digits.";
-            setTimeout(() => {
-                err.style.display = "none";
-            }, 3000);
-            return false
-
-        }
-
-
-        else if (!passwordPattern.test(password)) {
-            err.style.display = "block";
-            err.textContent = "Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character.";
-            setTimeout(() => {
-                err.style.display = "none";
-            }, 3000);
-            return false
-
-        }
-
-
-        else if (password != conpassword) {
-            err.style.display = "block";
-            err.textContent = "password do not match"
-            setTimeout(() => {
-                err.style.display = "none"
-            }, 3000)
-            return false
-
-        }
-
-
-        else if (!btn.checked) {
-            err.style.display = "block";
-            err.textContent = "You must agree to the terms and conditions."
-            document.querySelector('#form').submit()
-            setTimeout(() => {
-                err.style.display = "none"
-            }, 3000)
-            return false
-
-        }
-        else {
-            return true;
-        }
-        return true;
+    // Validation logic
+    if (!usernamePattern.test(username)) {
+        nameErr.textContent = "Username is invalid. It must be at least 4 characters long, containing only letters and numbers.";
+        setTimeout(()=>{
+            nameErr.textContent = '';
+        },5000)
+        isValid = false;
     }
 
-
-    window.onload=function(){
-        const errorMessage = document.getElementById('errorMessage');
-        if(errorMessage){
-            setTimeout(()=>{
-                errorMessage.style.display="none";
-            },5000)
-        }
+    if (!emailPattern.test(email)) {
+        emailErr.textContent = "Please enter a valid email address.";
+        setTimeout(()=>{
+            emailErr.textContent = '';
+        },5000)
+        isValid = false;
     }
+
+    if (!phonePattern.test(phone)) {
+        phoneErr.textContent = "Phone number must contain exactly 10 digits.";
+        setTimeout(()=>{
+            phoneErr.textContent = '';
+        },5000)
+        isValid = false;
+    }
+
+    if (!passwordPattern.test(password)) {
+        passwordErr.textContent = "Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character.";
+        setTimeout(()=>{
+            passwordErr.textContent = '';
+        },5000)
+        isValid = false;
+    }
+
+    if (password !== conpassword) {
+        conpasswordErr.textContent = "Passwords do not match.";
+        setTimeout(()=>{
+            conpasswordErr.textContent = '';
+        },5000)
+        isValid = false;
+    }
+
+    return isValid; // Return the overall validation status
+}
 
 </script>

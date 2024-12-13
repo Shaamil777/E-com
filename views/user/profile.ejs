@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FLATICON ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-straight/css/uicons-regular-straight.css"
+    />
+
+    <!--=============== SWIPER CSS ===============-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/user.css">
+
+    <title>Ecommerce Website</title>
+  </head>
+  <body>
+
+    <!--================ HEADER =================-->
+
+    <%- include('../partials/userHeader') %>
+
+     <!--=============== BREADCRUMB ===============-->
+     <section class="breadcrumb">
+        <ul class="breadcrumb__list flex container">
+          <li><a href="index.html" class="breadcrumb__link">Home</a></li>
+          <li><span class="breadcrumb__link">></span></li>
+          <li><span class="breadcrumb__link">Account</span></li>
+        </ul>
+      </section>
+  
+
+    <section class="accounts section--lg">
+        <div class="accounts__container container grid">
+          <div class="account__tabs">
+             
+            <p id="dashboard" class="account__tab active-tab" data-target="#dashboard">
+                <i class="fi fi-rs-settings-sliders"></i> Profile
+              </p>
+           
+              <p id="orders" class="account__tab" data-target="#orders">
+                <i  class="fi fi-rs-shopping-bag"></i> Orders
+              </p>
+              <p id="updateProfile" class="account__tab  " data-target="#update-profile">
+                <i class="fi fi-rs-user"></i> Update Profile
+              </p>
+              <p id="wallet" class="account__tab" data-target="#wallet">
+                <i class="fi fi-rs-wallet"></i> Wallet
+              </p>
+              <p id="address" class="account__tab " data-target="#address">
+                <i class="fi fi-rs-marker"></i> My Address
+              </p>
+              <p id="changePassword" class="account__tab " data-target="#change-password">
+                <i class="fi fi-rs-settings-sliders"></i> Change Password
+              </p>
+              <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
+            </div>
+  
+
+
+    <div class="tabs__content">
+        <div class="tab__content active-tab" content id="dashboard">
+          <h3 class="tab__header">Profile</h3>
+          <div class="tab__body">
+            <p class="tab__description">
+              Name :<%=user.name%>
+            </p>
+            <p>
+              Email :<%= user.email %>
+            </p>
+            <p>
+              Phone : <%= user.phone %>
+            </p>
+            <p>created At :<%= user.createdAt %></p>
+          </div>
+        </div>
+        </div>
+        </div>
+
+        
+        <%- include('../partials/userFooter') %>
+  </body>
+  </html>
+
+  <script>
+    document.getElementById('dashboard').addEventListener('click', function(){
+        window.location.href = '/profile'
+    })
+
+    document.getElementById('orders').addEventListener('click', function(){
+        window.location.href = '/orders'
+    })
+
+    document.getElementById('updateProfile').addEventListener('click', function(){
+        window.location.href = '/updateprofile'
+    })
+
+    document.getElementById('wallet').addEventListener('click', function(){
+        window.location.href = '/wallet'
+    })
+
+    document.getElementById('address').addEventListener('click', function(){
+        window.location.href = '/address'
+    })
+
+    document.getElementById('changePassword').addEventListener('click', function(){
+        window.location.href = '/changepassword'
+    })
+
+    document.getElementById('logout').addEventListener('click',function(){
+      window.location.href = '/logout'
+    })
+</script>

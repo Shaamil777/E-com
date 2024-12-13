@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/styles/user.css" rel="stylesheet">
+
+    <style>
+       /* General styles for the address container */
+.address-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if items overflow */
+    gap: 15px; /* Adds space between address options */
+    margin: 20px;
+    width: 100vh;
+}
+
+/* Styling for each address option */
+.address-option {
+    background-color: #f9f9f9; /* Light gray background */
+    border: 1px solid #ddd; /* Light border color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Padding inside each address box */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: calc(33.33% - 15px); /* Each address takes up one-third of the row */
+    box-sizing: border-box; /* Ensure padding/border doesn't overflow */
+}
+
+/* Hover effect on address option */
+.address-option:hover {
+    border-color: #007bff; /* Highlight border on hover */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2); /* Larger shadow */
+    background-color: #f1f9ff; /* Light blue background on hover */
+}
+
+/* Styling for radio button */
+input[type="radio"] {
+    margin-right: 15px; /* Space between radio button and address text */
+    cursor: pointer; /* Pointer cursor on hover */
+    width: 20px; /* Adjust radio button size */
+    height: 20px;
+}
+
+/* Label for radio button with address details */
+label {
+    font-size: 14px;
+    color: #333; /* Dark gray text */
+    cursor: pointer; /* Pointer cursor on hover */
+    line-height: 1.6;
+}
+
+label strong {
+    font-weight: 600; /* Bold labels */
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Support</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-dark pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <%- include('../partials/userHeader') %>
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Checkout</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Checkout Start -->
+    <div class="container-fluid pt-5">
+        <form id="form">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
+                    <div class="row">
+                        <div class="address-container">
+                            <% addresses.forEach(address => { %>
+                                <div class="address-option" id="addresses">
+                                    <!-- Radio button for selecting address -->
+                                    <input class="address" type="radio" id="address_<%= address._id %>" name="address" value="<%= address._id %>" />
+                                    <label for="address_<%= address._id %>">
+                                        <!-- Display the address details -->
+                                        <p><strong>House Name:</strong> <%= address.housename %><br>
+                                        <strong>Country:</strong> <%= address.country %><br>
+                                        <strong>State:</strong> <%= address.state %><br>
+                                        <strong>District:</strong> <%= address.district %><br>
+                                        <strong>Pincode:</strong> <%= address.pincode %></p>
+                                    </label>
+                                </div>
+                            <% }); %>
+                        </div>
+ 
+                    </div>
+                </div>
+
+
+                
+
+
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Products</h5>
+                        <% products.forEach(product =>{ %>
+                            <div class="d-flex justify-content-between" data-product-id="<%= product.productId._id %>">
+                            <p><%= product.productId.name %></p>
+                            <p>&#8377;<%= product.productId.price %></p>
+                            <input type="hidden" name="quantity"  value="<%= product.quantity %>">
+                        </div>
+                        <% }); %>
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium">&#8377;<%= subtotal %></h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">&#8377;<%= shipping %></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold">&#8377;<%= total %></h5>
+                            <input id="total" type="hidden" name="total" value="<%= total %>">
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Payment</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio"  class="custom-control-input" name="payment" id="paypal" value="UPI">
+                                <label class="custom-control-label" for="paypal">UPI</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="directcheck" value="COD">
+                                <label class="custom-control-label" for="directcheck">Cash On Delivery</label>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="razorpay" value="Razorpay">
+                                <label class="custom-control-label" for="razorpay">RazorPay</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <button type="submit" id="order" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    <!-- Checkout End -->
+
+
+   <%- include('../partials/userFooter') %>
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</body>
+
+</html>
+
+<script>
+    
+    const form = document.getElementById("form");
+form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    // Get the selected address
+    const selectedAddress = document.querySelector('input[name="address"]:checked');
+    if (!selectedAddress) {
+        alert("Please select an address.");
+        return;
+    }
+
+    // Get the selected payment method
+    const paymentMethod = document.querySelector('input[name="payment"]:checked');
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return;
+    }
+
+  const orderItems = Array.from(document.querySelectorAll('[data-product-id]')).map(product => {
+    const productId = product.getAttribute('data-product-id');
+    const quantity = product.querySelector('input[name="quantity"]').value;
+    const price = product.querySelector('p:last-of-type').innerText.replace(/[^0-9]/g,'');
+    return{
+        productId,
+        quantity:parseInt(quantity,10),
+        price:parseFloat(price)
+    }
+  })
+
+    const total = document.getElementById('total').value;
+
+    if(paymentMethod.value === "Razorpay"){
+        const response = await fetch('/razorpay',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                total:total,
+                orderItems:orderItems
+            })
+        });
+
+        const result  =await response.json();
+
+        if(result.success){
+            const razorpayOrderId = result.orderId;
+            var options = {
+                "key":"rzp_test_jdJq1T9w5UMPBf",
+                "amount":total * 100,
+                "currency":"INR",
+                "order_id":razorpayOrderId,
+                "handler": async function(response) {
+    try {
+        // Send payment verification request
+        const verifyResponse = await fetch('/verify-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature
+            })
+        });
+
+        // Log verification result for debugging
+        const verifyResult = await verifyResponse.json();
+        console.log("Verify result:", verifyResult);
+
+        if (verifyResult.success) {
+            // Proceed to save the order only after successful payment verification
+            const saveOrderResponse = await fetch('/save-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    selectedAddress: selectedAddress.value,
+                    paymentMethod: "Razorpay",
+                    total: total,
+                    orderItems: orderItems,
+                    paymentStatus: "Completed",
+                    paymentId: response.razorpay_payment_id
+                })
+            });
+
+            const saveOrderResult = await saveOrderResponse.json();
+            console.log("Save order result:", saveOrderResult);  // Check what response is returned
+
+            if (saveOrderResult.success) {
+                // Show success message
+                swal.fire({
+                    title: 'Payment Successful!',
+                    text: 'Thank you for your purchase. Your order has been confirmed.',
+                    icon: 'success',
+                    confirmButtonText: 'Okay',
+                    timer: 3000, // Auto close after 3 seconds
+                    showCloseButton: true
+                }).then(() => {
+                    // Redirect after order is saved successfully
+                    window.location.href = '/order/success';
+                });
+            } else {
+                // Show error if saving the order fails
+                swal.fire({
+                    title: 'Order Saving Failed!',
+                    text: 'There was an issue saving your order. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry'
+                });
+            }
+        } else {
+            // Show error if payment verification fails
+            swal.fire({
+                title: 'Payment Failed!',
+                text: 'Payment verification failed. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'Retry'
+            });
+        }
+    } catch (error) {
+        // Catch any unexpected errors
+        swal.fire({
+            title: 'Payment Verification Failed!',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'Retry'
+        });
+    }
+},
+
+                "prefill":{
+                    "name":"customer Name",
+                    "email":"customer@example.com",
+                    "contact":"1234567890"
+                }
+            };
+            const razorpay = new Razorpay(options);
+            razorpay.open()
+        }else{
+            swal.fire({
+                title: 'Payment Failed!',
+                text: 'Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'Okay',
+                timer: 3000, // Auto close after 3 seconds
+                showCloseButton: true
+            })
+        }
+    }else{
+    // Make the fetch request
+    const response = await fetch('/checkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            selectedAddress: selectedAddress.value,
+            paymentMethod: paymentMethod.value,
+            total,
+            orderItems, // Send the extracted order items
+        })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        alert(result.message);
+        window.location.href = '/order/success';
+    } else {
+        alert(result.message);
+        window.location.reload();
+        }  
+    }
+});
+</script>

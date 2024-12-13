@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <link rel="stylesheet" href="/styles/user.css">
+    <style>
+        .order-success-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .success-icon {
+            color: #28a745;
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .success-title {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .order-message {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .order-description {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 30px;
+        }
+
+        .back-to-home-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-to-home-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('../partials/userHeader') %>
+
+    <div style="display: flex; justify-content: center;">
+        <div class="order-success-container">
+            <div class="success-icon">✓</div>
+            <h1 class="success-title">Order Successfully Added!</h1>
+
+            <div class="order-message">
+                Thanks for shopping with us! Your order is on its way.
+            </div>
+
+            <div class="order-description">
+                Our team is already preparing your items with care. In the meantime, why not check out our latest deals? You never know what amazing product you'll find next!
+            </div>
+
+            <button id="homebtn" class="back-to-home-btn">Back to Home</button>
+        </div>
+    </div>
+
+    <%- include('../partials/userFooter') %>
+</body>
+</html>
+
+<script>
+    document.getElementById('homebtn').addEventListener('click', function() {
+        window.location.href = '/home';
+    });
+</script>

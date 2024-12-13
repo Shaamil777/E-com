@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URBANWORN</title>
+     <!-- Favicon -->
+     <link href="img/favicon.ico" rel="icon">
+
+     <!-- Google Web Fonts -->
+     <link rel="preconnect" href="https://fonts.gstatic.com">
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+ 
+     <!-- Font Awesome -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+ 
+     <!-- Libraries Stylesheet -->
+     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+ 
+     <!-- Customized Bootstrap Stylesheet -->
+     <link href="/styles/user.css" rel="stylesheet">
+
+        <style>
+                table th{
+                    font-weight: normal;
+                }
+
+                table th, table td {
+            vertical-align: middle;  /* Aligns content vertically */
+            text-align: center;      /* Aligns content horizontally */
+            }
+
+            .table img {
+            display: block;
+            margin: 0 auto;
+            }
+            .table img {
+            width: 50px;  /* Adjust the width if necessary */
+            height: auto;
+            }
+
+            .table .input-group {
+            width: 100px;  /* Adjust width as necessary */
+            margin: 0 auto;
+            }
+            .btn-success {
+            opacity: 0.7;  /* Adjust this value (0.0 to 1.0) for desired transparency */
+            }
+
+            .btn-success:hover {
+            opacity: 1;  /* Make it fully opaque on hover */
+            }
+
+        </style>
+    </head>
+<body>
+
+    <%- include('../partials/userHeader') %>
+
+
+
+
+
+ <!-- Page Header Start -->
+ <div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shopping Cart</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Cart Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>Products</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <% cart.items.forEach(item => { %>
+                        <tr>
+                            <td class="align-middle">
+                                <img src="<%= item.productId.image[0] %>" alt="" class="table-img"> 
+                                <%= item.productId.name %>
+                            </td>
+                            <td class="align-middle">&#8377;<%= item.productId.price %></td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto">
+                                    <input type="text" class="form-control form-control-sm text-center" value="<%= item.quantity %>">
+                                </div>
+                            </td>
+                            <td class="align-middle">&#8377;<%= item.productId.price * item.quantity %></td>
+                            <td class="align-middle">
+                                <button id="remove" class="btn btn-sm btn-danger remove" data-id="<%= item.productId._id %>">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            
+        </div>
+        <div class="col-lg-4">
+            <form class="mb-5" id="couponForm">
+                <div class="input-group">
+                    <input id="couponCode" type="text" class="form-control p-4" placeholder="Coupon Code">
+                    <div class="input-group-append">
+                        <button id="applyCoupon" class="btn text-dark rounded-pill ml-2" style="background-color: rgb(94, 190, 223);">Apply Coupon</button>
+                        <button  id="couponRemove" class="btn rounded-pill text-dark ml-1" style="background-color: rgb(255, 29, 29);">Remove Coupon</button>
+                    </div>
+                </div>
+            </form>
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Subtotal</h6>
+                        <h6 class="font-weight-medium">&#8377;<%= subtotal %></h6>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Shipping</h6>
+                        <h6 id="shipping" class="font-weight-medium">&#8377;
+                            <%=shipping%>
+                        </h6>
+                        
+                    </div>
+                    <div class="d-flex justify-content-between ">
+                        <h6 class="font-weight-medium">Discount</h6>
+                        <h6 id="discountAmount" class="font-weight-medium">&#8377;0</h6>
+                        
+                    </div>
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 id="totalAmount" class="font-weight-bold">&#8377;<%= Total %></h5>
+                    </div>
+                    <button id="checkout" class="btn btn-block btn-success my-3 py-3">Proceed To Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart End -->
+
+
+
+
+    <%- include('../partials/userFooter') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Contact Javascript File -->
+<script src="mail/jqBootstrapValidation.min.js"></script>
+<script src="mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+</body>
+</html>
+
+
+<script>
+
+document.querySelectorAll('.remove').forEach((button)=>{
+    button.addEventListener('click',async function(){
+       const productId = this.getAttribute('data-id');
+       try {
+            const response = await fetch(`/cart/remove/${productId}`,{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            const result = await response.json()
+            if(result.success){
+                alert(result.message)
+                window.location.reload()
+            }else{
+                alert(result.message)
+                window.location.reload()
+            }
+       } catch (error) {
+        console.error('An error occured while removing item from cart',error)
+
+        
+       }
+    })
+})
+
+</script>
+<script>
+    document.getElementById('checkout').addEventListener('click',function(){
+        window.location.href = '/checkout'
+    })
+
+    document.getElementById('applyCoupon').addEventListener('click',async function(){
+        event.preventDefault()
+        const couponcode = document.getElementById('couponCode').value
+         
+
+        try {
+            const response = await fetch('/applycoupon',{
+                method:'Post',
+                headers:{
+                    'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({couponCode:couponcode})
+            })
+            const result = await response.json()
+            if(result.success){
+                swal.fire({
+                    icon:'success',
+                    title:'Coupon Applied',
+                    text:result.message,
+                    confirmButtonText:'Okay'
+                }).then(()=>{
+                    document.getElementById('totalAmount').textContent = `${result.discountedTotal}`;
+                    document.getElementById('discountAmount').textContent = `-${result.discount}`;
+                       
+                })
+            }else{
+                swal.fire({
+                    icon:'error',
+                    title:'Error',
+                    text:result.message,
+                    confirmButtonText:'Okay'
+                })
+            }
+        } catch (error) {
+            console.error('An error occured while applying coupon',error)
+            swal.fire({
+                icon:'error',
+                title:'Error',
+                text:'An error occured while applying coupon',
+                confirmButtonText:'Okay'
+            })  
+        }
+    })
+
+  document.getElementById('couponRemove').addEventListener('click',async function(e){
+    e.preventDefault()
+    try {
+        const response = await fetch('/removecoupon',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+
+        const result = await response.json()
+        if(result.success){
+            swal.fire({
+                icon:'success',
+                title:'Coupon Removed',
+                text:result.message,
+                confirmButtonText:'Okay'
+            }).then(()=>{
+                window.location.reload()
+            })
+        }else{
+            swal.fire({
+                icon:'error',
+                title:'Error',
+                text:result.message,
+                confirmButtonText:'Okay'
+            })
+        }
+    } catch (error) {
+        console.error('An error occured while removing coupon',error)
+        swal.fire({
+            icon:'error',
+            title:'Error',
+            text:'An error occured while removing coupon',
+            confirmButtonText:'Okay'
+        })  
+    }
+  })
+
+</script>
