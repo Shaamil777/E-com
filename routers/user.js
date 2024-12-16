@@ -56,6 +56,7 @@ router.post('/wishlist/addtocart/:productId',checkBan,userController.wishlistCar
 router.get('/orders/:orderId/vieworder',checkBan,userController.viewOrder)
 router.get('/orders/:orderId/cancelorder',checkBan,userController.cancelOrder)
 router.post('/orders/:orderId/returnorder',checkBan,userController.returnOrder)
+router.get('/orders/:orderId/downloadinvoice',checkBan,userController.downloadInvoice)
 router.get('/order/success',checkBan,userController.orderSuccess)
 
 

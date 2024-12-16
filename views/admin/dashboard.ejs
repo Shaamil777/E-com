@@ -1,190 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin Panel</title>
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
+    <title>Admin Dashboard</title>
+    
+    <!-- External Styles -->
     <link rel="stylesheet" href="/styles/usermanagement.css">
-    <!-- End layout styles -->
-    <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
-  </head>
-  <body>
-    <%- include('../partials/adminSideBar') %>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_navbar.html -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    
+    <!-- Custom Inline Styles -->
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+
+    .top-products {
+        margin-top: 20px;
+    }
+    .product-item {
+        margin-bottom: 15px;
+    }
+    .product-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .progress-bar-container {
+        background-color: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 20px;
+    }
+    .progress-bar {
+        height: 100%;
+        background-color: #10b981;
+        color: #fff;
+        text-align: right;
+        padding-right: 5px;
+        line-height: 20px;
+        border-radius: 10px 0 0 10px;
+        transition: width 0.3s ease;
+    }
+
+
+
+.dashboard-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+    background: linear-gradient(to right, #3b82f6, #10b981); /* Stylish gradient */
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase; /* Adds emphasis */
+    letter-spacing: 1px; /* Slight spacing for elegance */
+    width: fit-content;
+    margin: 20px auto; /* Center aligns the element */
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Soft border for style */
+}
+
+
+body {
+    background-color: #1d1d24;
+}
+
+.product-name{
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: black;
+
+}
+.chart-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+    margin-bottom: 20px;
+}
+
+.chart-buttons button {
+    background: linear-gradient(to right, #3b82f6, #10b981); /* Stylish gradient */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px; /* Makes buttons rounded */
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.chart-buttons button:hover {
+    transform: translateY(-3px); /* Slight lift effect */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    background: linear-gradient(to right, #10b981, #3b82f6); /* Reversed gradient on hover */
+}
+
+.chart-buttons button:active {
+    transform: translateY(1px); /* Slight push-down effect on click */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+    background: #2563eb; /* Slightly darker background on click */
+}
+
+
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-cards {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Allows cards to wrap to the next line on smaller screens */
+    gap: 20px; /* Adds space between the cards */
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 22%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures the icon and text are spaced out */
+    transition: transform 0.3s ease;
+    flex-direction: column;
+    text-align: center;
+    min-width: 250px; /* Prevents the cards from getting too small */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Centers horizontally */
+    text-align: center;
+}
+
+.card-icon {
+    margin-top: 5px;
+    border-radius: 50%;
+    padding: 15px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-content h3 {
+    margin-top: 10px;
+    color: #718096;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.card-content .value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+/* Color variations for different cards */
+.users-card .card-icon { background-color: #e6f2ff; color: #3b82f6; }
+.orders-card .card-icon { background-color: #d1fae5; color: #10b981; }
+.products-card .card-icon { background-color: #fef3c7; color: #f59e0b; }
+.sales-card .card-icon { background-color: #dcfce7; color: #22c55e; }
+
+.chart-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+#salesChart {
+    width: 100%;
+    height: 350px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .summary-cards {
+        flex-direction: column;
+        align-items: center; /* Centers the cards vertically */
+    }
+    .card {
+        width: 100%; /* Makes the cards full-width on smaller screens */
+        margin-bottom: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <%- include('../partials/adminSideBar') %>
+    <div class="container-fluid page-body-wrapper" style="margin-top: 6%;">
+        <!-- Navbar Section -->
         <nav class="navbar p-0 fixed-top d-flex flex-row">
-          <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
-          </div>
-          <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
-            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-              <span class="mdi mdi-menu"></span>
-            </button>
-            <ul class="navbar-nav w-100">
-              <li class="nav-item w-100">
-                
-              </li>
-            </ul>
-            <ul class="navbar-nav navbar-nav-right">
-              <li class="nav-item nav-settings d-none d-lg-block">
-                <a class="nav-link" href="#">
-                  <i class="mdi mdi-view-grid"></i>
-                </a>
-              </li>
-              <li class="nav-item dropdown border-left">
-                <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                  <i class="mdi mdi-email"></i>
-                  <span class="count bg-success"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-                  <h6 class="p-3 mb-0">Messages</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face4.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Mark send you a message</p>
-                      <p class="text-muted mb-0"> 1 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face2.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Cregh send you a message</p>
-                      <p class="text-muted mb-0"> 15 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <img src="assets/images/faces/face3.jpg" alt="image" class="rounded-circle profile-pic">
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject ellipsis mb-1">Profile picture updated</p>
-                      <p class="text-muted mb-0"> 18 Minutes ago </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">4 new messages</p>
-                </div>
-              </li>
-              <li class="nav-item dropdown border-left">
-                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                  <i class="mdi mdi-bell"></i>
-                  <span class="count bg-danger"></span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                  <h6 class="p-3 mb-0">Notifications</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-calendar text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Event today</p>
-                      <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Settings</p>
-                      <p class="text-muted ellipsis mb-0"> Update dashboard </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-link-variant text-warning"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Launch Admin</p>
-                      <p class="text-muted ellipsis mb-0"> New admin wow! </p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">See all notifications</p>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
-                  <h6 class="p-3 mb-0">Profile</h6>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-settings text-success"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Settings</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item preview-item">
-                    <div class="preview-thumbnail">
-                      <div class="preview-icon bg-dark rounded-circle">
-                        <i class="mdi mdi-logout text-danger"></i>
-                      </div>
-                    </div>
-                    <div class="preview-item-content">
-                      <p class="preview-subject mb-1">Log out</p>
-                    </div>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <p class="p-3 mb-0 text-center">Advanced settings</p>
-                </div>
-              </li>
-            </ul>
-            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-              <span class="mdi mdi-format-line-spacing"></span>
-            </button>
-          </div>
-        </nav>
-        <!-- partial -->
-        <div class="row p-3">
-          <div class="col-12 grid-margin">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Order Status</h4>
-                <div class="table-responsive">
-                  
-                  
-                </div>
-              </div>
+            <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo-mini" href="#"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
             </div>
+            <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                            <i class="mdi mdi-bell"></i>
+                            <span class="count bg-danger"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Content Section -->
+        <div class="dashboard-container">
+            <div class="summary-cards">
+                <div class="card users-card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Users</h3>
+                        <div class="value"><%= users.length %></div>
+                    </div>
+                </div>
+                <div class="card orders-card">
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Orders</h3>
+                        <div class="value"><%=order.length%></div>
+                    </div>
+                </div>
+                <div class="card products-card">
+                    <div class="card-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Products</h3>
+                        <div class="value"><%=product.length%></div>
+                    </div>
+                </div>
+                <div class="card sales-card">
+                    <div class="card-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total Sales</h3>
+                        <div class="value"><%=total%></div>
+                    </div>
+                </div>
+
+                <!-- Top Selling Product -->
+                <div class="card top-product-card">
+                    <div class="card-icon">
+                        <i class="fas fa-star" style="color: yellow;"></i>
+
+                    </div>
+                    <div class="card-content">
+                        <h3>Top Product</h3>
+                        <div class="value"><%= topProducts[0].name %></div>
+                    </div>
+                </div>
+                    
+            </div>
+            <div class="chart-buttons">
+              <button id="yearlyBtn">Yearly</button>
+              <button id="monthlyBtn">Monthly</button>
+              <button id="weeklyBtn">Weekly</button>
           </div>
-        </div>
-        <div style="margin-top:100px ;" class="col-md-4 grid-margin stretch-card userInfoView">
-          
-          </div>
-        </div>
-        <!-- main-panel ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
+
+
+              <div class="chart-container">
+                <h2 class="dashboard-title">Sales Data for <%= year %></h2>
+                <canvas id="salesChart"></canvas>
+            </div>
+            
+            <div class="chart-container mt-4">
+                <h2 class="dashboard-title">Top 5 Products</h2>
+                <div class="top-products">
+                    <% topProducts.forEach(product => { %>
+                        <div class="product-item">
+                            <div class="product-name"><%= product.name %></div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: <%= (product.quantity / topProducts[0].quantity) * 100 %>%;">
+                                    <%= product.quantity %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+            
+            
     </div>
-    <!-- Custom js for this page -->
-    <script src="/js/admin/users.js"></script>
-    <!-- End custom js for this page -->
-  </body>
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        let salesChart;
+    
+        // Updated updateChart function
+        const updateChart = async (type) => {
+          try {
+            const response = await fetch(`/admin/dashboard?type=${type}`, {
+              headers: {
+                Accept: 'application/json' // Explicitly tell the server we expect JSON
+              }
+            });
+    
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const { labels, salesData } = await response.json();
+    
+            if (salesChart) {
+              salesChart.data.labels = labels;
+              salesChart.data.datasets[0].data = salesData;
+              salesChart.update();
+            }
+          } catch (error) {
+            console.error('Error updating chart: ', error);
+          }
+        };
+    
+        document.getElementById('yearlyBtn').addEventListener('click', () => updateChart('yearly'));
+        document.getElementById('monthlyBtn').addEventListener('click', () => updateChart('monthly'));
+        document.getElementById('weeklyBtn').addEventListener('click', () => updateChart('weekly'));
+    
+        const initializeChart = () => {
+          salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: [],
+              datasets: [{
+                label: 'Sales Data',
+                data: [],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Sales Count' } },
+                x: { title: { display: true, text: 'Time' } }
+              }
+            }
+          });
+        };
+    
+        document.addEventListener('DOMContentLoaded', () => {
+          initializeChart();
+          updateChart('yearly');
+        });
+    </script>
+    
+  <div>
+    
+  
+</body>
 </html>

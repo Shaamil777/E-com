@@ -241,7 +241,13 @@
                                     <button  class="bg-success rounded-pill" style="width: 10vw;">
                                       <a data-id="<%= order._id %>" id="return" href="/orders/<%= order._id %>/returnorder" class="return__order text-light" >Return</a>
                                     </button>
-                                  <% } %>
+
+                                     <!-- Download Invoice Button for Completed orders with Completed payment status -->
+                                     <button class="bg-info rounded-pill mt-2" style="width: 10vw;">
+                                      <a href="/orders/<%= order._id %>/downloadinvoice" class="download__invoice text-light">Download Invoice</a>
+                                  </button>
+                                  
+                                  <% } %>                                    
                                 </td>
                                 
                                 

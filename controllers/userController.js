@@ -13,6 +13,7 @@ const Wishlist = require('../models/wishlistModel')
 const Wallet = require('../models/walletModel')
 const Coupon = require('../models/couponModel')
 const { response } = require('express');
+const PDFDocument = require('pdfkit')
 const instance = require('../utils/razorpay')
 
 
@@ -858,6 +859,91 @@ const returnOrder = async (req,res)=>{
         res.status(500).json({success:false,message:"Something went wring while requesting return for order"})
     }
 }
+const downloadInvoice = async (req, res) => {
+    const orderId = req.params.orderId;
+    try {
+        const order = await Order.findOne({ _id: orderId })
+            .populate('orderItems.productId')
+            .populate('userId')
+            .populate('addressId');
+
+        if (!order) {
+            return res.status(404).json({ success: false, message: "Order not found" });
+        }
+
+        const doc = new PDFDocument({ margin: 50 });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="invoice_${orderId}.pdf"`);
+
+        doc.pipe(res);
+
+        // Title and Header
+        doc.fontSize(20).text('Invoice', { align: 'center', underline: true });
+        doc.moveDown();
+
+        // Add a styled box
+        const boxX = 50;
+        const boxY = 100;
+        const boxWidth = 500;
+        const boxHeight = 500;
+        doc.rect(boxX, boxY, boxWidth, boxHeight).stroke();
+
+        const contentStartY = boxY + 10;
+
+        // Order Details
+        doc.fontSize(12).text(`Order ID: ${order._id}`, boxX + 10, contentStartY);
+        doc.text(`Customer Name: ${order.userId.name}`);
+        doc.text(`Address: ${order.addressId.houseName}`);
+        doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`);
+        doc.moveDown();
+
+        // Order Items Table Header
+        doc.fontSize(14).text('Order Items:', { underline: true });
+        doc.moveDown(0.5);
+
+        // Table styling
+        const itemsStartY = doc.y;
+        let rowY = itemsStartY;
+
+        doc.fontSize(12).text('S.No', boxX + 10, rowY, { width: 50, align: 'center' });
+        doc.text('Product Name', boxX + 70, rowY, { width: 200, align: 'left' });
+        doc.text('Quantity', boxX + 280, rowY, { width: 100, align: 'center' });
+        doc.text('Price (₹)', boxX + 380, rowY, { width: 100, align: 'right' });
+
+        doc.moveDown(0.5);
+        rowY += 20;
+
+        order.orderItems.forEach((item, index) => {
+            doc.text(index + 1, boxX + 10, rowY, { width: 50, align: 'center' });
+            doc.text(item.productId.name, boxX + 70, rowY, { width: 200, align: 'left' });
+            doc.text(item.quantity, boxX + 280, rowY, { width: 100, align: 'center' });
+            doc.text(`₹${item.productId.price}`, boxX + 380, rowY, { width: 100, align: 'right' });
+
+            rowY += 20;
+        });
+
+        doc.moveDown();
+        // Ensure Total fits inside the box
+        const totalY = rowY + 20;
+        if (totalY > boxY + boxHeight - 30) {
+            rowY = boxY + boxHeight - 40; // Adjust rowY to fit inside the box
+        }
+
+        // Calculate a new X-coordinate for the total amount to fit properly
+        const totalX = boxX + boxWidth - 300; // Move 100 units from the right edge of the box
+        doc.fontSize(16).text(`Total: Rs.${order.totalAmount}`, totalX, rowY, { align: 'right' });
+
+        // End and send the document
+        doc.end();
+
+
+    } catch (error) {
+        console.error('Error generating invoice:', error);
+        res.status(500).json({ success: false, message: "Failed to generate invoice" });
+    }
+};
+
 
 //filtering the products in shop page
 const filter = async (req, res) => {
@@ -1199,5 +1285,6 @@ razorPay,
 verifyPayment,
 saveOrder,
 returnOrder,
-orderSuccess
+orderSuccess,
+downloadInvoice
 }

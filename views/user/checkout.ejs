@@ -446,6 +446,16 @@ form.addEventListener('submit', async function (e) {
             })
         }
     }else{
+
+        if(total>5000){
+            swal.fire({
+                title: 'COD Not Possible',
+                text: 'Your total amount exceeds the limit for Cash on Delivery.',
+                icon: 'warning',
+                confirmButtonText: 'Okay'
+            })
+        }else{
+
     // Make the fetch request
     const response = await fetch('/checkout', {
         method: 'POST',
@@ -463,12 +473,26 @@ form.addEventListener('submit', async function (e) {
     const result = await response.json();
 
     if (result.success) {
-        alert(result.message);
-        window.location.href = '/order/success';
+        swal.fire({
+            title: 'Order Placed Successfully!',
+            text: result.message,
+            icon: 'success',
+            confirmButtonText: 'Okay',
+            timer: 3000, // Auto close after 3 seconds
+        }).then(()=>{
+            window.location.href = '/order/success';
+        })
     } else {
-        alert(result.message);
-        window.location.reload();
+        swal.fire({
+            title: 'Order Failed!', 
+            text: result.message,
+            icon: 'error',
+            confirmButtonText: 'Retry'
+        }).then(()=>{
+            window.location.reload();
+        })
         }  
+       }
     }
 });
 </script>
