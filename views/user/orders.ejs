@@ -236,13 +236,19 @@
                                     </button>
                                   <% } %>
                                 
+                                  <% if (order.paymentMethod === 'Razorpay' && order.paymentStatus === 'Pending') { %>
+                                    <button data-id="<%= order._id %>" class="bg-success rounded-pill mt-2" style="width: 10vw;">
+                                      <a id="paynow" data-id="<%= order._id %>" class="pay__now text-light  paynow">Pay Now</a>
+                                    </button>
+                                  <% } %>
+
+
                                   <!-- Return button for Completed orders with Completed payment status -->
                                   <% if (order.status === 'Completed' && order.paymentStatus === 'Completed') { %>
                                     <button  class="bg-success rounded-pill" style="width: 10vw;">
                                       <a data-id="<%= order._id %>" id="return" href="/orders/<%= order._id %>/returnorder" class="return__order text-light" >Return</a>
                                     </button>
 
-                                     <!-- Download Invoice Button for Completed orders with Completed payment status -->
                                      <button class="bg-info rounded-pill mt-2" style="width: 10vw;">
                                       <a href="/orders/<%= order._id %>/downloadinvoice" class="download__invoice text-light">Download Invoice</a>
                                   </button>
@@ -263,7 +269,6 @@
                       <div id="returnFormContainer" class="return-form-container">
                         <h4>Return Request</h4>
                         <form id="returnForm">
-                          <!-- Hidden input for order ID -->
                           <input type="hidden" id="orderId" name="orderId">
                           <textarea id="returnReason" name="reason" class="return-input" placeholder="Enter reason for return" required></textarea>
                           <div class="return-actions">
@@ -284,6 +289,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
       <%- include('../partials/userFooter') %>
+      
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
   </body>
   </html>
@@ -456,4 +464,86 @@
 });
 
 </script>
+<script>
+ document.querySelectorAll('.paynow').forEach((button) => {
+    button.addEventListener('click', async function (e) {
+        e.preventDefault();
 
+        const orderId = button.getAttribute('data-id');
+
+        const paynowResponse = await fetch(`/orders/${orderId}/paynow`, {
+            method: "GET",
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const orderResult = await paynowResponse.json();
+
+        if (orderResult.success) {
+            const options = {
+                key: orderResult.razorpayKey,
+                amount: orderResult.amount,
+                currency: orderResult.currency,
+                order_id: orderResult.razorpayOrderId,
+                handler: async function (response) {
+                    try {
+                        const verifyResponse = await fetch("/verify-payment", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                                orderId:orderId,
+                            }),
+                        });
+
+                        const verifyResult = await verifyResponse.json();
+
+                        if (verifyResult.success) {
+                            swal.fire({
+                                title: "Payment Successful",
+                                text: verifyResult.message,
+                                icon: "success",
+                                confirmButtonText: "Okay",
+                            }).then(() => {
+                                window.location.href = "/order/success";
+                            });
+                        } else {
+                            swal.fire({
+                                title: "Payment Failed",
+                                text: verifyResult.message,
+                                icon: "error",
+                                confirmButtonText: "Retry",
+                            });
+                        }
+                    } catch (error) {
+                        swal.fire({
+                            title: "Payment Verification Failed",
+                            text: "There was an error verifying your payment. Please try again.",
+                            icon: "error",
+                            confirmButtonText: "Retry",
+                        });
+                    }
+                },
+            };
+
+            const razorpay = new Razorpay(options);
+
+            razorpay.on("payment.failed", function (response) {
+              console.error("Payment failed details:",response)
+                swal.fire({
+                    title: "Payment Incomplete",
+                    text: "The payment could not be completed. Please try again.",
+                    icon: "info",
+                    confirmButtonText: "Retry",
+                }).then(() => {
+                    window.location.href = "/orders";
+                });
+            });
+
+            razorpay.open();
+        }
+    });
+});
+
+</script>

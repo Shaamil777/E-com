@@ -47,6 +47,7 @@ router.post('/checkout',checkBan,userController.placeOrder)
 router.post('/razorpay',checkBan,userController.razorPay)
 router.post('/verify-payment',checkBan,userController.verifyPayment)
 router.post('/save-order',checkBan,userController.saveOrder)
+router.get('/orders/:orderId/paynow',checkBan,userController.payNow)
 
 router.get('/wishlist',checkBan,userController.loadWishlist)
 router.post('/wishlist/add',checkBan,userController.addToWishlist)
