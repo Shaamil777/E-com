@@ -192,6 +192,7 @@
                       <th>Updated Date</th>
                       <th>Update</th>
                       <th>Delete</th>
+                      <th>Offer</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -225,10 +226,30 @@
                             Delete
                           </button>
                         </td>
+                        <td>
+                          <% if(!category.isOfferApplied) {%>
+                          <button id="btn-offer" class="btn btn-outline-success btn-offer" onclick="showmodal('<%=category._id%>')">
+                            Apply offer
+                          </button>
+                          <% }else{ %>
+                            <button class="btn btn-outline-success btn-offer-remove" data-id="<%= category._id %>">
+                              Remove offer
+                            </button>
+                            <% } %>
+                        </td>
                       </tr>
                       <% }); %>
                   </tbody>
                 </table>
+              </div>
+              <div id="offerModal" class="modal" style="display: none; position: relative;left: 175px;top: -329px;" >
+                <div class="modal-content">
+                  <h4>Apply Offer</h4>
+                  <label for="offerPercentage">Offer Percentage:</label>
+                  <input type="number" id="offerPercentage" placeholder="Enter offer percentage" />
+                  <button onclick="applyOffer()">Apply Offer</button>
+                  <button onclick="closeModal()">Cancel</button>
+                </div>
               </div>
             </div>
           </div>
@@ -249,6 +270,8 @@
   </div>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   
   <script>
 
@@ -304,6 +327,122 @@
       }
     })
   })
+</script>
+<script>
+  let catId=null;
+  function showmodal(categoryId){
+     catId=categoryId;
+     document.getElementById('offerModal').style.display = 'block';
+  }
 
-  
+  async function applyOffer(){
+    let offerPercentage=document.getElementById('offerPercentage').value
+    if(!offerPercentage){
+      swal.fire({
+        title: 'Error',
+        text: 'Please enter offer percentage',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+      return;
+    }
+    if(offerPercentage>70){
+      swal.fire({
+        title: 'Error',
+        text: 'Offer percentage should not exceed 70%',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+      return;
+    }
+    if(offerPercentage<=0){
+      swal.fire({
+        title: 'Error',
+        text: 'Offer percentage should not be negative',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+      return;
+    }
+
+    try {
+      const response = await fetch(`/admin/categorymanagement/${catId}/apply`,{
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({offerPercentage:offerPercentage})
+      })
+      const result = await response.json()
+      if(result.success){
+        swal.fire({
+          title: 'Success',
+          text: 'Offer applied successfully',
+          icon:'success',
+          confirmButtonText: 'Okay'
+        }).then(()=>{
+          window.location.href='/admin/categorymanagement'
+        })
+      }else{
+        swal.fire({
+          title: 'Error',
+          text: result.message,
+          icon: 'error',
+          confirmButtonText: 'Okay'
+        })
+      }
+    } catch (error) {
+      console.error("Error while applying offer:",error);
+      swal.fire({
+        title: 'Error',
+        text: 'Failed to apply offer',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+    }
+  }
+
+  function closeModal(){
+    document.getElementById('offerModal').style.display = 'none';
+  }
+</script>
+<script>
+  document.querySelectorAll('.btn-offer-remove').forEach((button)=>{
+    button.addEventListener('click',async function(e){
+      const categoryId = button.getAttribute('data-id');
+      console.log(categoryId);
+
+      try {
+        const response = await fetch(`/admin/categorymanagement/${categoryId}/remove`,{
+          method:"PUT",
+          headers:{
+            "Content-Type": "application/json"
+          }
+        });
+
+        const result = await response.json();
+
+        if(result.success){
+          swal.fire({
+            title:"success",
+            text:result.message,
+            icon:"success",
+            confirmButtonText:"Okay"
+          }).then(()=>{
+            window.location.reload()
+          })
+        }else{
+          swal.fire({
+            title: 'Error',
+            text: result.message,
+            icon: 'error',
+            confirmButtonText: 'Okay'
+          })
+        }
+      } catch (error) {
+        console.error("Error while removing offer:",error);
+        alert("Failed to remove offer");
+      }
+    })
+  })
 </script>

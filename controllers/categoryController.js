@@ -1,5 +1,6 @@
 const Category = require('../models/categoryModel')
-const path = require('path')
+const path = require('path');
+const productModel = require('../models/productModel');
 
 const loadCategoryManagement = async(req, res)=>{
     try{
@@ -102,8 +103,6 @@ async function categoryUpdate(req, res) {
   }
 }
 
-
-
 const updateCategory = async(req, res)=>{
     const {categoryName,categoryImage,categoryDescription,categoryId} = req.body;
     
@@ -125,6 +124,61 @@ const updateCategory = async(req, res)=>{
         console.error('Error updating category : ',error);
         res.status(500).json({success:false,message:'error updating category'});
     }
+}
+
+const applyOffer = async (req,res)=>{
+  const {catId} = req.params;
+  const {offerPercentage} = req.body;
+  try {
+    if(!offerPercentage){
+      return res.status(400).json({success:false,
+        message:"offerPercentage is required"
+      })
+    }
+    const products = await productModel.find({category:catId})
+    if(!products){
+      return res.status(404).json({success:false,message:'no products found'});
+    }
+    console.log(offerPercentage)
+    for(let product of products){
+      product.withoutOfferPrice=product.price
+      const discount = parseInt((product.price * offerPercentage) / 100)
+      const newPrice = product.price-discount;
+
+      product.price=newPrice;
+      await product.save()
+    }
+    
+    
+    await Category.findByIdAndUpdate(catId,{isOfferApplied:true});
+    return res.status(200).json({success:true,message:"OfferPercentage applied successfully"});
+  } catch (error) {
+    console.error("Error while applying offer:",error);
+    return res.status(500).json({success:false,message:"Something went wrong:",error});
+  }
+}
+
+const removeOffer= async(req,res)=>{
+  const {categoryId} = req.params;
+  try {
+    if(!categoryId){
+      return res.status(400).json({success:false,message:"Invalid categoryId"})
+    }
+    const products = await productModel.find({category:categoryId})
+    if(!products){
+      return res.status(404).json({success:false,message:'No products found'});
+    }
+    for(let product of products){
+      product.price=product.withoutOfferPrice;
+      await product.save()
+    }
+
+    await Category.findByIdAndUpdate(categoryId,{isOfferApplied:false});
+    return res.status(200).json({success:true,message:"Offer removed successfully"});
+  } catch (error) {
+    console.error("Error removing offer : ",error);
+    return res.status(500).json({success:false,message:"Something went wrong"})
+  }
 }
 
 const loadDeletedCategory = async(req,res)=>{
@@ -191,4 +245,6 @@ module.exports ={
    recoverCategory,
    categoryUpdate,
    categoryImageUpdate,
+   applyOffer,
+   removeOffer
 }

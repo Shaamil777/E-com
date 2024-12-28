@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const adminAuth = require('../middleware/adminAuth')
 const adminController = require('../controllers/adminController')
 const categoryController = require('../controllers/categoryController')
 const productController = require('../controllers/productController')
@@ -10,31 +11,31 @@ const upload_2 = require('../utils/categoryMulter')
 
 router.get('/login',adminController.loadAdminLogin)
 router.post('/login',adminController.loginForm)
-router.get('/dashboard',adminController.loadDashboard)
+router.get('/dashboard',adminAuth,adminController.loadDashboard)
 
 
-router.get('/usermanagement',adminController.loadUserManagement)
-router.put('/usermanagement/ban',adminController.userBan)
-router.get('/usermanagement/view',adminController.userView)
+router.get('/usermanagement',adminAuth,adminController.loadUserManagement)
+router.put('/usermanagement/ban',adminAuth,adminController.userBan)
+router.get('/usermanagement/view',adminAuth,adminController.userView)
 
 
 
-router.get('/categorymanagement',categoryController.loadCategoryManagement)
-router.get('/category/add',categoryController.loadAddCategory)
+router.get('/categorymanagement',adminAuth,categoryController.loadCategoryManagement)
+router.get('/category/add',adminAuth,categoryController.loadAddCategory)
 router.post('/category/add',upload_2.single('categoryImage'),categoryController.addCategory)
-router.get('/category/update/:id',categoryController.loadUpdateCategory)
-router.put('/category/update',categoryController.updateCategory)
-router.get('/category/deletedcategory',categoryController.loadDeletedCategory)
-router.put('/category/delete',categoryController.deleteCategory)
-router.put('/category/recover',categoryController.recoverCategory);
-router.post('/admin/category/update/:categoryId', categoryController.categoryUpdate);
-
+router.get('/category/update/:id',adminAuth,categoryController.loadUpdateCategory)
+router.put('/category/update',adminAuth,categoryController.updateCategory)
+router.get('/category/deletedcategory',adminAuth,categoryController.loadDeletedCategory)
+router.put('/category/delete',adminAuth,categoryController.deleteCategory)
+router.put('/category/recover',adminAuth,categoryController.recoverCategory);
+router.post('/admin/category/update/:categoryId',adminAuth, categoryController.categoryUpdate);
 router.post('/update-category-image/:categoryId',upload_2.single('categoryImage'),categoryController.categoryImageUpdate);
-router.post('/category/update/:categoryId', categoryController.categoryUpdate);
+router.post('/category/update/:categoryId',adminAuth, categoryController.categoryUpdate);
+router.put('/categorymanagement/:catId/apply',adminAuth,categoryController.applyOffer)
+router.put('/categorymanagement/:categoryId/remove',adminAuth,categoryController.removeOffer)
 
-
-router.get('/productmanagement',productController.loadProductManagement)
-router.get('/product/add',productController.loadAddProduct)
+router.get('/productmanagement',adminAuth,productController.loadProductManagement)
+router.get('/product/add',adminAuth,productController.loadAddProduct)
 router.post('/product/add',upload.fields([
     { name: 'productImage1', maxCount: 1 },
     { name: 'productImage2', maxCount: 1 },
@@ -42,10 +43,10 @@ router.post('/product/add',upload.fields([
     { name: 'productImage4', maxCount: 1 },
     { name: 'productImage5', maxCount: 1 }
   ]),productController.addProduct)
-router.put('/product/delete',productController.deleteProduct)
-router.get('/product/deletedproduct',productController.loadDeletedProduct)
-router.put('/product/recover',productController.recoverProduct)
-router.get('/product/update/:id',productController.loadUpdateProduct)
+router.put('/product/delete',adminAuth,productController.deleteProduct)
+router.get('/product/deletedproduct',adminAuth,productController.loadDeletedProduct)
+router.put('/product/recover',adminAuth,productController.recoverProduct)
+router.get('/product/update/:id',adminAuth,productController.loadUpdateProduct)
 router.put('/product/update', upload.fields([
   { name: 'productImage1', maxCount: 1 },
   { name: 'productImage2', maxCount: 1 },
@@ -55,20 +56,22 @@ router.put('/product/update', upload.fields([
 
 
 
-router.get('/ordermanagement',orderController.loadOrderManagement)
-router.get('/vieworder/:orderId',orderController.viewOrder)
-router.post('/order/:orderId/updatestatus',orderController.updateStatus)
-router.put('/order/:orderId/returnstatus',orderController.returnRequest)
+router.get('/ordermanagement',adminAuth,orderController.loadOrderManagement)
+router.get('/vieworder/:orderId',adminAuth,orderController.viewOrder)
+router.post('/order/:orderId/updatestatus',adminAuth,orderController.updateStatus)
+router.put('/order/:orderId/returnstatus',adminAuth,orderController.returnRequest)
 
 
-router.get('/couponmanagement',couponController.loadCouponManagement)
-router.get('/coupon/add',couponController.loadAddCoupon)
-router.post('/coupon/add',couponController.addCoupon)
-router.put('/coupon/delete',couponController.deleteCoupon)
-router.get('/coupon/update/:couponId',couponController.loadUpdateCoupon)
-router.put('/coupon/update',couponController.updateCoupon)
+router.get('/couponmanagement',adminAuth,couponController.loadCouponManagement)
+router.get('/coupon/add',adminAuth,couponController.loadAddCoupon)
+router.post('/coupon/add',adminAuth,couponController.addCoupon)
+router.put('/coupon/delete',adminAuth,couponController.deleteCoupon)
+router.get('/coupon/update/:couponId',adminAuth,couponController.loadUpdateCoupon)
+router.put('/coupon/update',adminAuth,couponController.updateCoupon)
 
-router.get('/salesreport',adminController.loadSalesReport)
-router.get('/salesreportdata',adminController.reportData)
+router.get('/salesreport',adminAuth,adminController.loadSalesReport)
+router.get('/salesreportdata',adminAuth,adminController.reportData)
 
+
+router.get('/logout',adminAuth,adminController.logout);
 module.exports = router

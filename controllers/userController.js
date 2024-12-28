@@ -190,6 +190,9 @@ const loadHome =async (req,res)=>{
 
 //loading the profile page on my acoount
 const loadProfile = async(req,res)=>{
+    if(!req.session || !req.session.userData){
+        return res.redirect('/login')
+    }
     const {email} = req.session.userData
     console.log(email);
     
@@ -241,17 +244,46 @@ const viewOrder = async(req,res)=>{
 //cancelling the order on order section in my account
 const cancelOrder = async(req,res)=>{
     const orderId = req.params.orderId;
-    try {
-        const order = await Order.findByIdAndUpdate(orderId,{status: 'cancelled'},{new:true});
+    const userId = req.session.userData.id
+   try {
+        const order = await Order.findById(orderId)
+        if(order.paymentMethod === 'Razorpay'){
+            const wallet = await Wallet.findOne({userId:order.userId})
+            if(!wallet){
+                wallet = new Wallet({
+                    userId:order.userId,
+                    balance:0,
+                    transactions:[],
+                })
+            }
+            const refundableAmount = order.totalAmount;
+            wallet.balance +=refundableAmount;
 
-        if(!order){
-            return res.status(404).send('Order not found. Please try again')
+            wallet.transactions.push({
+                amount:refundableAmount,
+                type:'Credit',
+                description:`Refund for Order ID : ${orderId}`
+            })
+            wallet.updatedAt = new Date();
+
+            await wallet.save();
+            
+            order.status = 'Cancelled';
+            order.updatedAt = new Date();
+            await order.save()
+
+            return res.redirect('/orders?cancelled=true');
         }
-        res.redirect('/orders?cancelled=true')
-    } catch (error) {
-        console.error("Error cancelling order :",error)
-        res.status(500).send("Error cancelling order. Please try again.")
-    }
+        order.status = "Cancelled"
+        order.updatedAt = new Date();
+        await order.save()
+        return res.redirect('/orders?cancelled=true');
+
+
+   } catch (error) {
+    console.error("Error occured while cancelling the product",error);
+    return res.status(500).send("Error cancelling the order. Please try again.")
+   }
 }
 
 
@@ -504,6 +536,7 @@ const loadItemDetails =async (req,res)=>{
 
 //laoding the cart page
 const loadCart = async (req, res) => {
+    
     try {
       const userId = req.session.userData.id; // Assuming user ID is in the session
       
@@ -511,8 +544,8 @@ const loadCart = async (req, res) => {
       const cart = await Cart.findOne({ userId }).populate('items.productId'); // Populate product details
       
      
-      if (!cart) {
-        return res.status(404).json({ success: false, message: 'Cart not found' });
+      if (!cart || !cart.items || cart.items.length === 0) {
+        return res.render('user/cart',{cart:{items:[]},Total:0,shipping:0,subtotal:0});
       }
   
       // Access the items array from the cart
@@ -565,12 +598,19 @@ const loadCart = async (req, res) => {
 
   //adding products to the cart page
 const addToCart = async (req,res)=>{
+
+    if(!req.session || !req.session.userData){
+        return res.status(401).json({success:false,message:"User not logged in"});
+    }
+
+
     const productId = req.params.id
     const {quantity}=req.body;
     const userId = req.session.userData.id
     
     
     try {
+        
         const product = await Product.findById(productId);
         if(!product){
             return res.status(404).json({success:false,message:"Product not found"});
@@ -1064,6 +1104,10 @@ const loadWishlist = async (req,res)=>{
 
 //product adding to wishlist
 const addToWishlist = async(req,res)=>{
+
+    if(!req.session || !req.session.userData){
+        return res.status(401).json({success:false,message:"User not logged in"})
+    }
     const {productId} = req.body
     const userId = req.session.userData?.id
     

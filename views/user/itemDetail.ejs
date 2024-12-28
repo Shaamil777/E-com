@@ -533,6 +533,15 @@
                 }).then(() => {
                     window.location.reload();
                 })
+            }else if(response.status===401){
+                swal.fire({
+                    title: 'Error',
+                    text: 'You must be logged in to add items to the cart',
+                    icon: 'error',
+                    confirmButtonText: 'okay',
+                }).then(()=>{
+                    window.location.href = '/login';
+                })
             } else {
                 swal.fire({
                     title: 'Error',
@@ -610,6 +619,15 @@
                     title: 'Product Added to Wishlist',
                     text: data.message,
                     confirmButtonText: 'Ok',
+                })
+            }else if(response.status==401){
+                swal.fire({
+                    icon: 'error',
+                    title:"User not logged in",
+                    text: "Please login to add product to wishlist",
+                    confirmButtonText: 'Ok',
+                }).then(()=>{
+                    window.location.href = '/login';
                 })
             } else {
                 swal.fire({

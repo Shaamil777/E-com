@@ -21,8 +21,7 @@ const loginForm = async (req,res)=>{
     try {
         const admin =await User.findOne({email:email,password:password,role:"admin"})
         if(admin){
-          
-            
+          req.session.admin = true;
             res.redirect('/admin/dashboard')
         }else{
             res.render('admin/login',{message:"enter valid admin"})
@@ -190,7 +189,24 @@ const userBan = async(req,res)=>{
 
 const loadSalesReport = async(req,res)=>{
     try{
-        res.render('admin/SalesReport')
+        const now = new Date();
+        const startDate = new Date(now.getFullYear(),now.getMonth(),1);
+        const endDate = new Date(now.getFullYear(),now.getMonth()+1,0);
+        const orders = await Order.find({
+            createdAt:{$gte: startDate , $lte:endDate},
+        }).populate('userId','name')
+
+        const totalSaleAmount = orders.reduce((sum,order) => sum+order.totalAmount,0)
+        res.render('admin/SalesReport',{
+            totalSaleAmount,
+            orders:orders.map((order)=>({
+                orderId:order._id,
+                userId:order.userId._id,
+                customerName:order.userId.name,
+                saleAmount:order.totalAmount,
+                orderDate:order.createdAt,
+            }))
+    })
     }catch(error){
         console.error('Error loading sales report',error);
         res.status(500).json({message:'Internal server error'})
@@ -238,6 +254,10 @@ const reportData = async (req, res) => {
     }
 };
 
+const logout = (req,res)=>{
+    req.session.admin = null;
+    res.redirect('/admin/login');
+}
 
 module.exports = {
     loadUserManagement,
@@ -247,5 +267,6 @@ module.exports = {
     userBan,
     userView,
     loadSalesReport,
-    reportData
+    reportData,
+    logout
 }

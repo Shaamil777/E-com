@@ -90,27 +90,36 @@
                     </tr>
                 </thead>
                 <tbody class="align-middle">
-                    <% cart.items.forEach(item => { %>
+                    <% if (cart.items.length === 0) { %>
                         <tr>
-                            <td class="align-middle">
-                                <img src="<%= item.productId.image[0] %>" alt="" class="table-img"> 
-                                <%= item.productId.name %>
-                            </td>
-                            <td class="align-middle">&#8377;<%= item.productId.price %></td>
-                            <td class="align-middle">
-                                <div class="input-group quantity mx-auto">
-                                    <input type="text" class="form-control form-control-sm text-center" value="<%= item.quantity %>">
-                                </div>
-                            </td>
-                            <td class="align-middle">&#8377;<%= item.productId.price * item.quantity %></td>
-                            <td class="align-middle">
-                                <button id="remove" class="btn btn-sm btn-danger remove" data-id="<%= item.productId._id %>">
-                                    <i class="fa fa-times"></i>
-                                </button>
+                            <td colspan="5" class="text-center">
+                                <h5 class="text-muted">No items found in your cart</h5>
                             </td>
                         </tr>
-                    <% }) %>
+                    <% } else { %>
+                        <% cart.items.forEach(item => { %>
+                            <tr>
+                                <td class="align-middle">
+                                    <img src="<%= item.productId.image[0] %>" alt="" class="table-img">
+                                    <%= item.productId.name %>
+                                </td>
+                                <td class="align-middle">&#8377;<%= item.productId.price %></td>
+                                <td class="align-middle">
+                                    <div class="input-group quantity mx-auto">
+                                        <input type="text" class="form-control form-control-sm text-center" value="<%= item.quantity %>">
+                                    </div>
+                                </td>
+                                <td class="align-middle">&#8377;<%= item.productId.price * item.quantity %></td>
+                                <td class="align-middle">
+                                    <button id="remove" class="btn btn-sm btn-danger remove" data-id="<%= item.productId._id %>">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } %>
                 </tbody>
+                
             </table>
             
         </div>

@@ -371,8 +371,14 @@
     
     // Show an alert if the order was successfully cancelled
     if (cancelled) {
-      alert("Your order has been successfully cancelled.");
-      window.location.href = '/orders'
+      swal.fire({
+        title: 'Order Cancelled',
+        text: 'Your order has been successfully cancelled.',
+        icon:'success',
+        confirmButtonText: 'Okay',
+      }).then(()=>{
+        window.location.href = '/orders'
+      })
     }
   });
 </script>

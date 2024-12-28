@@ -133,6 +133,63 @@
 </html>
 
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+      try {
+          const today = new Date();
+          const startDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-01`;
+          const endDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()}`;
+
+          const response = await fetch(`/admin/salesreportdata?startDate=${startDate}&endDate=${endDate}`, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+              document.getElementById('total-sale-amount').textContent = `Rs.${result.totalSaleAmount.toFixed(2)}`;
+
+              const tableBody = document.querySelector('#order-table tbody');
+              tableBody.innerHTML = ''; // Clear previous data
+
+              result.orders.forEach((order) => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                      <td>${order.orderId}</td>
+                      <td>${order.customerName || 'N/A'}</td>
+                      <td>Rs.${(order.saleAmount || 0).toFixed(2)}</td>
+                      <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                  `;
+                  tableBody.appendChild(row);
+              });
+
+              document.getElementById('order-table').style.display = 'table'; // Show the table
+          } else {
+              swal.fire({
+                  title: 'Error',
+                  text: result.message,
+                  icon: 'error',
+                  confirmButtonText: 'Okay',
+              });
+          }
+      } catch (error) {
+          console.error(error);
+          swal.fire({
+              title: 'Error',
+              text: 'An error occurred while fetching the default sales report',
+              icon: 'error',
+              confirmButtonText: 'Okay',
+          });
+      }
+  });
+</script>
+
+
+
+
+
 <!--CUSTOM DATE SALES REPORT-->
 <script>
     const form = document.getElementById('saleForm');

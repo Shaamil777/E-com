@@ -5,6 +5,7 @@ const categorySchema = new mongoose.Schema({
     image : {type:String,required:true},
     description :{type:String},
     productCount:{type:Number},
+    isOfferApplied:{type:Boolean,default:false},
     createdAt : { type: Date, default: Date.now },
     updatedAt : { type: Date, default: Date.now },
     isDeleted : { type: Boolean, default: false },
