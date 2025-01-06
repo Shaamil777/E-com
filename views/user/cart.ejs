@@ -106,7 +106,13 @@
                                 <td class="align-middle">&#8377;<%= item.productId.price %></td>
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto">
-                                        <input type="text" class="form-control form-control-sm text-center" value="<%= item.quantity %>">
+                                        <input type="number" class="form-control form-control-sm text-center" 
+                                               value="<%= item.quantity %>" 
+                                               min="1" 
+                                               max="4" 
+                                               data-id="<%= item.productId._id %>" 
+                                               id="quantity_<%= item.productId._id %>"
+                                               oninput="updateCartTotal(this)">
                                     </div>
                                 </td>
                                 <td class="align-middle">&#8377;<%= item.productId.price * item.quantity %></td>
@@ -168,9 +174,6 @@
 </div>
 <!-- Cart End -->
 
-
-
-
     <%- include('../partials/userFooter') %>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -205,11 +208,23 @@ document.querySelectorAll('.remove').forEach((button)=>{
 
             const result = await response.json()
             if(result.success){
-                alert(result.message)
-                window.location.reload()
+                swal.fire({
+                    title: 'Success',
+                    text: result.message,
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                }).then(()=>{
+                    window.location.reload()
+                })
             }else{
-                alert(result.message)
-                window.location.reload()
+               swal.fire({
+                title: 'Error',
+                text: result.message,
+                icon: 'error',
+                confirmButtonText: 'Ok'
+               }).then(()=>{               
+                   window.location.reload()
+               })
             }
        } catch (error) {
         console.error('An error occured while removing item from cart',error)

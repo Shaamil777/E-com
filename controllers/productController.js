@@ -4,9 +4,14 @@ const path = require('path')
 
 
 const loadProductManagement = async(req, res)=>{
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 5;
     try{
-        const product = await Product.find({isDeleted:false});
-       return res.render('admin/productManagement',{products:product});
+        const productCount = await Product.countDocuments({ isDeleted: false });
+
+        const product = await Product.find({isDeleted:false}).skip((page-1)*limit).limit(limit);
+
+       return res.render('admin/productManagement',{products:product,currentPage:page,totalPages:Math.ceil(productCount/limit),limit:limit});
         
     }catch(error){
         console.error('Error loading category',error);
@@ -94,16 +99,45 @@ const loadUpdateProduct = async (req, res) => {
     }
 };
 
+const  productImageUpdate=async(req, res)=>{
+    try {
+      const { productIndex } = req.body;
+      const { productId } = req.params;
+      if (!req.file) {
+        return res
+          .status(400)
+          .json({ val: false, msg: "No file was uploaded" });
+      }
+      const filePath = path.relative(
+        path.join(__dirname, "..", "public"),
+        req.file.path
+      );
+      console.log("Product Index:", productIndex);
+      console.log("Product ID:", productId);
+      console.log("File Path:", filePath);
+      const product = await Product.findOne({ _id: productId });
+      if (!product) {
+        return res.status(404).json({ val: false, msg: "Product not found" });
+      }
+      product.image[productIndex] = filePath;
+      await product.save();
+      return res
+        .status(200)
+        .json({ val: true, msg: "Product image updated successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ val: false, msg: "Server error" });
+    }
+  }
+
 
 const updateProduct = async (req, res) => {
     const { productName, productDescription, productId, productCategory, productBrand, productPrice, productStock, productWarrenty, productReturn } = req.body;
+
+
     
-    const productImages = [
-        req.files['productImage1'] ? req.files['productImage1'][0].path : null,
-        req.files['productImage2'] ? req.files['productImage2'][0].path : null,
-        req.files['productImage3'] ? req.files['productImage3'][0].path : null,
-        req.files['productImage4'] ? req.files['productImage4'][0].path : null
-    ];
+   
+
 
     try {
         const product = await Product.findById(productId);
@@ -123,7 +157,7 @@ const updateProduct = async (req, res) => {
         product.updatedAt = Date.now();
 
         // Assign images if they exist
-        product.images = productImages.filter(image => image !== null);
+       
 
         await product.save();
         res.status(200).json({ success: true, message: 'Product updated successfully' });
@@ -195,4 +229,5 @@ module.exports ={
    loadDeletedProduct,
    deleteProduct,
    recoverProduct,
+   productImageUpdate
 }

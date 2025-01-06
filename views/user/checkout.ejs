@@ -301,14 +301,22 @@ label strong {
     // Get the selected address
     const selectedAddress = document.querySelector('input[name="address"]:checked');
     if (!selectedAddress) {
-        alert("Please select an address.");
+        swal.fire({
+            title: "Error",
+            text: "Please select an address",
+            icon: "error",
+        })
         return;
     }
 
     // Get the selected payment method
     const paymentMethod = document.querySelector('input[name="payment"]:checked');
     if (!paymentMethod) {
-        alert("Please select a payment method.");
+        swal.fire({
+            title: "Error",
+            text: "Please select a payment method",
+            icon: "error",
+        })
         return;
     }
 

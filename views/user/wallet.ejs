@@ -23,6 +23,29 @@
     <title>Ecommerce Website</title>
     
   <style>
+      .pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pagination-btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
+
+
     /* ATM card styling */
 .atm-card {
     width: 300px;
@@ -121,7 +144,7 @@
         <!--=============== BREADCRUMB ===============-->
         <section class="breadcrumb">
           <ul class="breadcrumb__list flex container">
-            <li><a href="index.html" class="breadcrumb__link">Home</a></li>
+            <li><a href="/home" class="breadcrumb__link">Home</a></li>
             <li><span class="breadcrumb__link">></span></li>
             <li><span class="breadcrumb__link">Account</span></li>
           </ul>
@@ -186,6 +209,30 @@
                                       <p>No transactions available.</p>
                                   <% } %>
                               </div>
+
+                              <div class="pagination-container">
+                                <% if (currentPage > 1) { %>
+                                  <a href="/wallet?page=<%= currentPage - 1 %>" class="pagination-btn">Previous</a>
+                                <% } else { %>
+                                  <button class="pagination-btn" disabled>Previous</button>
+                                <% } %>
+                            
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                  <% if (i === currentPage) { %>
+                                    <button class="pagination-btn" disabled><%= i %></button>
+                                  <% } else { %>
+                                    <a href="/wallet?page=<%= i %>" class="pagination-btn"><%= i %></a>
+                                  <% } %>
+                                <% } %>
+                            
+                                <% if (currentPage < totalPages) { %>
+                                  <a href="/wallet?page=<%= currentPage + 1 %>" class="pagination-btn">Next</a>
+                                <% } else { %>
+                                  <button class="pagination-btn" disabled>Next</button>
+                                <% } %>
+                              </div>
+                            </div>
+
                             </div>
                       </div>
                   </div>

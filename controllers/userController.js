@@ -36,7 +36,7 @@ const loadLogin = async(req,res)=>{
 
 //loading the verify page
 const loadVerify = (req,res)=>{
-    const {email}=req.session.user
+    const {email}=req.session.userData
     res.render('user/verify',{email})
 }
 
@@ -51,7 +51,7 @@ const sentOTP = async(req,res)=>{
    try {
 
     const hashedPassword = await bcrypt.hash(password,saltRounds)
-    req.session.user={
+    req.session.userData={
         username,
         email,
         phone,
@@ -69,7 +69,7 @@ const sentOTP = async(req,res)=>{
 
 //verifying the otp after registering
 const verifyOtp= async(req,res)=>{
-    const {email}=req.session.user
+    const {email}=req.session.userData
     const {otp}=req.body
     
     try {
@@ -85,10 +85,10 @@ const verifyOtp= async(req,res)=>{
         }
 
         const user = new User({
-            name:req.session.user.username,
-            email:req.session.user.email,
-            phone:req.session.user.phone,
-            password:req.session.user.password,
+            name:req.session.userData.username,
+            email:req.session.userData.email,
+            phone:req.session.userData.phone,
+            password:req.session.userData.password,
         });
 
         await user.save();
@@ -210,10 +210,13 @@ const loadProfile = async(req,res)=>{
 
 //loading the orders in my account
 const loadOrders = async(req,res)=>{
-    const orders = await Order.find()
- 
+    const userId = req.session.userData.id
+    const page = parseInt(req.query.page)||1;
+    const limit = 5
     try {
-        res.render('user/orders',{orders:orders})   
+        const ordersCount = await Order.countDocuments();
+        const orders = await Order.find({userId}).skip((page-1)*limit).limit(limit)
+        res.render('user/orders',{orders:orders,currentPage:page,totalPages:Math.ceil(ordersCount / limit)})   
     } catch (error) {
         console.error("Error loading orders page :",error)
         res.status(500).send("Error loading orders page. Please try again.")
@@ -303,6 +306,8 @@ const loadUpdateProfile = async(req,res)=>{
 
 //loading the wallet page 
 const loadWallet = async(req,res)=>{
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
     try{
     const userId = req.session.userData?.id;
     const wallet = await Wallet.findOne({userId:userId});
@@ -310,9 +315,17 @@ const loadWallet = async(req,res)=>{
             return res.render('user/wallet',{balance:0,transactions:[]})
         }
 
+        const totalTransactions= wallet.transactions.length;
+        const totalPages = Math.ceil(totalTransactions/limit);
+
+        const paginatedTransactions = wallet.transactions.slice((page - 1)*limit,page * limit).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+
+
         res.render('user/wallet',{
             balance:wallet.balance,
-            transactions:wallet.transactions
+            transactions:paginatedTransactions,
+            currentPage: page,
+            totalPages: totalPages
         })
     }catch(error){
         console.error(error)
@@ -593,7 +606,9 @@ const loadCart = async (req, res) => {
     }
   };
   
-    
+ 
+  
+ 
 
 
   //adding products to the cart page
@@ -964,86 +979,131 @@ const downloadInvoice = async (req, res) => {
             return res.status(404).json({ success: false, message: "Order not found" });
         }
 
+        // Create PDF document with slightly larger margins
         const doc = new PDFDocument({ margin: 50 });
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="invoice_${orderId}.pdf"`);
-
         doc.pipe(res);
 
-   
-        doc.fontSize(20).text('Invoice', { align: 'center', underline: true });
+        // Add company header
+        doc.fontSize(24).font('Helvetica-Bold').text('URBANWORN', { align: 'center' });
+        doc.fontSize(14).font('Helvetica').text('Tax Invoice/Bill of Supply', { align: 'center' });
         doc.moveDown();
 
-        
-        const boxX = 50;
-        const boxY = 100;
-        const boxWidth = 500;
-        const boxHeight = 500;
-        doc.rect(boxX, boxY, boxWidth, boxHeight).stroke();
-
-        const contentStartY = boxY + 10;
-
-        const fullAddress = `${order.addressId.housename},
-        ${order.addressId.city},
-        ${order.addressId.district},
-        ${order.addressId.state},
-        ${order.addressId.country} - ${order.addressId.pincode}`;
-
-        
-        doc.fontSize(12).text(`Order ID: ${order._id}`, boxX + 10, contentStartY);
-        doc.text(`Customer Name: ${order.userId.name}`);
-        doc.text('Address:');
-        doc.text(fullAddress,{indent:10});
-        doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`);
+        // Add horizontal line
+        doc.moveTo(50, doc.y)
+           .lineTo(550, doc.y)
+           .stroke();
         doc.moveDown();
 
+        // Invoice details and customer info in two columns
+        const leftColumn = 50;
+        const rightColumn = 300;
+
+        // Left column - Invoice details
+        doc.font('Helvetica-Bold').fontSize(12).text('Invoice Details:', leftColumn);
+        doc.font('Helvetica').fontSize(10)
+           .text(`Invoice Number: INV-${orderId.slice(-6)}`, leftColumn, doc.y + 5)
+           .text(`Order Date: ${new Date(order.createdAt).toLocaleDateString('en-IN')}`, leftColumn)
+           .text(`Invoice Date: ${new Date().toLocaleDateString('en-IN')}`, leftColumn);
+
+        // Right column - Customer details
+        doc.font('Helvetica-Bold').fontSize(12).text('Bill To:', rightColumn, doc.y - 60);
+        doc.font('Helvetica').fontSize(10)
+           .text(`${order.userId.name}`, rightColumn, doc.y + 5)
+           .text(order.addressId.housename, rightColumn)
+           .text(order.addressId.city, rightColumn)
+           .text(`${order.addressId.district}, ${order.addressId.state}`, rightColumn)
+           .text(`${order.addressId.country} - ${order.addressId.pincode}`, rightColumn);
+
+        doc.moveDown(2);
+
+        // Add table header with background
+        const tableTop = doc.y;
+        const tableHeaders = ['No', 'Item Description', 'Qty', 'Price', 'Total'];
+        const columnWidths = [40, 250, 70, 90, 90];
         
-        doc.fontSize(14).text('Order Items:', { underline: true });
-        doc.moveDown(0.5);
-
+        // Draw table header background
+        doc.rect(leftColumn, tableTop - 5, 500, 20).fill('#f0f0f0');
         
-        const itemsStartY = doc.y;
-        let rowY = itemsStartY;
-
-        doc.fontSize(12).text('S.No', boxX + 10, rowY, { width: 50, align: 'center' });
-        doc.text('Product Name', boxX + 70, rowY, { width: 200, align: 'left' });
-        doc.text('Quantity', boxX + 280, rowY, { width: 100, align: 'center' });
-        doc.text('Price (Rs.)', boxX + 380, rowY, { width: 100, align: 'right' });
-
-        doc.moveDown(0.5);
-        rowY += 20;
-
-        order.orderItems.forEach((item, index) => {
-            doc.text(index + 1, boxX + 10, rowY, { width: 50, align: 'center' });
-            doc.text(item.productId.name, boxX + 70, rowY, { width: 200, align: 'left' });
-            doc.text(item.quantity, boxX + 280, rowY, { width: 100, align: 'center' });
-            doc.text(`₹${item.productId.price}`, boxX + 380, rowY, { width: 100, align: 'right' });
-
-            rowY += 20;
+        // Draw table header text
+        doc.font('Helvetica-Bold').fontSize(10);
+        let xOffset = leftColumn;
+        tableHeaders.forEach((header, i) => {
+            doc.fillColor('black').text(header, xOffset + 5, tableTop, {
+                width: columnWidths[i],
+                align: i === 0 ? 'center' : i === 1 ? 'left' : 'right'
+            });
+            xOffset += columnWidths[i];
         });
 
-        doc.moveDown();
-        
-        const totalY = rowY + 20;
-        if (totalY > boxY + boxHeight - 30) {
-            rowY = boxY + boxHeight - 40; 
-        }
+        // Add table rows
+        doc.font('Helvetica').fontSize(10);
+        let yOffset = tableTop + 25;
 
-        
-        const totalX = boxX + boxWidth - 300; 
-        doc.fontSize(16).text(`Total: Rs.${order.totalAmount}`, totalX, rowY, { align: 'right' });
+        order.orderItems.forEach((item, index) => {
+            xOffset = leftColumn;
+            const rowData = [
+                (index + 1).toString(),
+                item.productId.name,
+                item.quantity.toString(),
+                `₹${item.productId.price.toFixed(2)}`,
+                `₹${(item.quantity * item.productId.price).toFixed(2)}`
+            ];
 
-        
+            // Draw alternating row background
+            if (index % 2 === 1) {
+                doc.rect(leftColumn, yOffset - 5, 500, 20).fill('#f9f9f9');
+            }
+
+            rowData.forEach((text, i) => {
+                doc.fillColor('black').text(text, xOffset + 5, yOffset, {
+                    width: columnWidths[i],
+                    align: i === 0 ? 'center' : i === 1 ? 'left' : 'right'
+                });
+                xOffset += columnWidths[i];
+            });
+
+            yOffset += 20;
+        });
+
+        // Add total section
+        doc.moveDown(2);
+        const totalSection = doc.y + 10;
+
+        // Draw total box
+        doc.rect(350, totalSection, 200, 80)
+           .lineWidth(1)
+           .stroke();
+
+        // Add total details
+        doc.font('Helvetica-Bold').fontSize(10)
+           .text('Sub Total:', 360, totalSection + 10, { width: 100 })
+           .text('Tax (18%):', 360, totalSection + 30, { width: 100 })
+           .text('Grand Total:', 360, totalSection + 50, { width: 100 });
+
+        const subTotal = order.totalAmount / 1.18;
+        const tax = order.totalAmount - subTotal;
+
+        doc.font('Helvetica').fontSize(10)
+           .text(`₹${subTotal.toFixed(2)}`, 460, totalSection + 10, { width: 80, align: 'right' })
+           .text(`₹${tax.toFixed(2)}`, 460, totalSection + 30, { width: 80, align: 'right' })
+           .font('Helvetica-Bold')
+           .text(`₹${order.totalAmount.toFixed(2)}`, 460, totalSection + 50, { width: 80, align: 'right' });
+
+        // Add footer
+        doc.fontSize(8).font('Helvetica')
+           .text('Thank you for your business!', 50, doc.page.height - 50, { align: 'center' })
+           .text(`Generated on ${new Date().toLocaleString('en-IN')}`, { align: 'center' });
+
         doc.end();
-
 
     } catch (error) {
         console.error('Error generating invoice:', error);
         res.status(500).json({ success: false, message: "Failed to generate invoice" });
     }
 };
-
 
 //filtering the products in shop page
 const filter = async (req, res) => {
@@ -1392,4 +1452,5 @@ returnOrder,
 orderSuccess,
 downloadInvoice,
 payNow,
+
 }

@@ -1,6 +1,7 @@
 const Category = require('../models/categoryModel')
 const path = require('path');
 const productModel = require('../models/productModel');
+const Offer = require('../models/offerModel')
 
 const loadCategoryManagement = async(req, res)=>{
     try{
@@ -126,58 +127,79 @@ const updateCategory = async(req, res)=>{
     }
 }
 
-const applyOffer = async (req,res)=>{
-  const {catId} = req.params;
-  const {offerPercentage} = req.body;
+const applyOffer = async(req,res)=>{
+  const {catName}=req.params
+  const {discountPercentage,startDate,endDate} = req.body
   try {
-    if(!offerPercentage){
-      return res.status(400).json({success:false,
-        message:"offerPercentage is required"
-      })
-    }
-    const products = await productModel.find({category:catId})
-    if(!products){
-      return res.status(404).json({success:false,message:'no products found'});
-    }
-    console.log(offerPercentage)
-    for(let product of products){
-      product.withoutOfferPrice=product.price
-      const discount = parseInt((product.price * offerPercentage) / 100)
-      const newPrice = product.price-discount;
 
-      product.price=newPrice;
-      await product.save()
+    if(!discountPercentage || !startDate || !endDate){
+      return res.status(400).json({success:false,message:"All fields are required"})
     }
+    if(discountPercentage<=0 || discountPercentage>100){
+      return res.status(400).json({success:false,message:"Invalid discount percentage"})
+    }
+    const currentTime = new Date();
+    if(new Date(endDate) <= currentTime){
+      return res.status(400).json({success:false,message:"End date should be greater than current date"})
+    }
+    const existingOffer = await Offer.findOne({category:catName,expireAt:{$gte:currentTime}})
+    if(existingOffer){
+      return res.status(400).json({success:false,message:"Offer already exists for this category"})
+    }
+
+    const products = await productModel.find({category:catName});
+    if(!products || products.length === 0){
+      return res.status(404).json({success:false,message:"Product not found"})
+    }
+    for(let product of products){
+      if(!product.withoutOfferPrice||product.withOfferPrice===0){
+        product.withoutOfferPrice = product.price;
+      }
+      product.price = product.price - (product.price * discountPercentage) / 100;
+      await product.save();
+    }
+
+    const offer = new Offer({
+      category:catName,
+      startDate:new Date(startDate),
+      endDate:new Date(endDate),
+      discountPercentage:discountPercentage,
+      expireAt:new Date(endDate)
+    })
+
+    await offer.save();
+
+    await Category.updateOne({name:catName},{$set:{isOfferApplied:true}})
     
-    
-    await Category.findByIdAndUpdate(catId,{isOfferApplied:true});
-    return res.status(200).json({success:true,message:"OfferPercentage applied successfully"});
+    res.status(200).json({success:true,message:"Offer applied successfully"})
   } catch (error) {
-    console.error("Error while applying offer:",error);
-    return res.status(500).json({success:false,message:"Something went wrong:",error});
+    console.error('Error applying offer:',error);
+    res.status(500).json({success:false,message:"Error while applying offer"})
   }
 }
 
-const removeOffer= async(req,res)=>{
-  const {categoryId} = req.params;
+const removeOffer = async(req,res)=>{
+  const {catName}=req.params;
   try {
-    if(!categoryId){
-      return res.status(400).json({success:false,message:"Invalid categoryId"})
+    const offer = await Offer.findOneAndDelete({category:catName});
+
+    if(!offer){
+      return res.status(404).json({success:false,message:"No active offer found for this category"})
     }
-    const products = await productModel.find({category:categoryId})
-    if(!products){
-      return res.status(404).json({success:false,message:'No products found'});
-    }
+    const products = await productModel.find({category:catName});
     for(let product of products){
-      product.price=product.withoutOfferPrice;
-      await product.save()
+      if(product.withoutOfferPrice){
+        product.price = product.withoutOfferPrice;
+        product.withoutOfferPrice = undefined;
+        await product.save();
+      }
     }
 
-    await Category.findByIdAndUpdate(categoryId,{isOfferApplied:false});
-    return res.status(200).json({success:true,message:"Offer removed successfully"});
+    await Category.updateOne({name:catName},{$set:{isOfferApplied:false}});
+    res.status(200).json({success:true,message:"Offer removed successfully"})
   } catch (error) {
-    console.error("Error removing offer : ",error);
-    return res.status(500).json({success:false,message:"Something went wrong"})
+    console.error("Error occured while removing the offer",error);
+    res.status(500).json({success:false,message:"Something went wrong,failed to remove offer"})
   }
 }
 

@@ -35,6 +35,7 @@ router.get('/itemDetail/:id',checkBan,userController.loadItemDetails)
 
 
 router.get('/cart',checkBan,userController.loadCart)
+
 router.post('/addtocart/:id',checkBan,userController.addToCart)
 router.put('/cart/remove/:id',checkBan,userController.removeCart)
 

@@ -4,11 +4,18 @@ const Wallet = require('../models/walletModel')
 
 
 const loadOrderManagement = async(req,res)=>{
+    const page = parseInt(req.query.page)||1;
+    const limit = 5;
     try {
-        const orders = await Order.find().populate('userId')
+        const totalOrders = await Order.countDocuments({})
+        const orders = await Order.find().populate('userId').skip((page-1)*limit).limit(limit);
         
     
-       res.render('admin/orderManagement',{orders: orders}) 
+       res.render('admin/orderManagement',{orders: orders,
+        currentPage:page,
+        totalPages:Math.ceil(totalOrders / limit),
+        limit:limit
+       }) 
     } catch (error) {
         console.error("Error occcured while loading order management",error);
    

@@ -13,6 +13,30 @@
   <link rel="stylesheet" href="/styles/usermanagement.css">
   <!-- End layout styles -->
   <!-- <link rel="shortcut icon" href="assets/images/favicon.png" /> -->
+
+  <style>
+          .pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pagination-btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
+  </style>
 </head>
 
 <body>
@@ -235,6 +259,30 @@
                 </table>
               </div>
             </div>
+
+            <div class="pagination-container">
+              <% if (currentPage > 1) { %>
+                  <a href="/admin/productmanagement?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="pagination-btn">Previous</a>
+              <% } else { %>
+                  <button class="pagination-btn" disabled>Previous</button>
+              <% } %>
+          
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                  <% if (i === currentPage) { %>
+                      <button class="pagination-btn" disabled><%= i %></button>
+                  <% } else { %>
+                      <a href="/admin/productmanagement?page=<%= i %>&limit=<%= limit %>" class="pagination-btn"><%= i %></a>
+                  <% } %>
+              <% } %>
+          
+              <% if (currentPage < totalPages) { %>
+                  <a href="/admin/productmanagement?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="pagination-btn">Next</a>
+              <% } else { %>
+                  <button class="pagination-btn" disabled>Next</button>
+              <% } %>
+          </div>
+          
+
           </div>
         </div>
       </div>
@@ -293,8 +341,14 @@
         const result = await response.json();
         console.log(result)
         if(result.success){
-          alert('Product deleted successfully')
-          window.location.reload();
+          swal.fire({
+            title: 'Success',
+            text: 'Product deleted successfully',
+            icon:'success',
+            timer: 1500
+          }).then(()=>{
+            window.location.reload();
+          })
         }
       } catch(error) {
         console.error('Error while deleting product',error)

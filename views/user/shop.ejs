@@ -11,6 +11,8 @@
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
@@ -23,6 +25,39 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/styles/user.css" rel="stylesheet">
+    <style>
+        .card-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header img {
+  transition: transform 0.3s ease;
+}
+
+.card-header:hover img {
+  transform: scale(1.05);
+}
+
+.card-header .offer-tag {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 3px 20px;
+  box-shadow: 2px 3px 5px 0px #0000007d;
+  border-radius: 10px 0 10px 0;
+  color: rgb(170, 51, 14);
+  font-weight: 700;
+  background-color: rgba(238, 238, 49, 0.76);
+  z-index: 999;
+  transition: transform 0.3s ease;
+}
+
+.card-header:hover .offer-tag {
+  transform: scale(1.1);
+}
+
+    </style>
 </head>
 
 <body>
@@ -124,9 +159,15 @@
                             <div class="card product-item border-0 mb-4">
                                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                                     <a href="/itemDetail/<%= product.id %>">
-                                    <img class="img-fluid w-100" src="/<%= product.image[0] %>" alt="<%= product.name %>">
-                                </a>
-                                </div>
+                                      <img class="img-fluid w-100" src="/<%= product.image[0] %>" alt="<%= product.name %>">
+                                      <% if (product.withoutOfferPrice > 0) { %>
+                                        <span class="offer-tag">
+                                          <%= ((product.withoutOfferPrice - product.price) / product.withoutOfferPrice * 100) %>% 
+                                          <i class="fa-solid fa-tag"></i>
+                                        </span>
+                                      <% } %>
+                                    </a>
+                                  </div>
                                 <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                     <h6 class="text-truncate mb-3"><%= product.name %></h6>
                                     <div class="d-flex justify-content-center">
@@ -141,33 +182,7 @@
                             <% }) %>
                
                     
-                                <!--pagination start-->
-
-                    <!-- <div class="col-12 pb-1">
-                        <nav aria-label="Page navigation">
-                          <ul class="pagination justify-content-center mb-3">
-                            <li class="page-item disabled">
-                              <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                              <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                              </a>
-                            </li>
-                          </ul>
-                        </nav>
-                    </div> -->
-
-
-                    <!--pagination end-->
-
+                        
 
                 </div>
             </div>

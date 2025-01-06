@@ -3,6 +3,7 @@ const express=require('express')
 const userRoutes = require('./routers/user')
 const adminRoutes = require('./routers/admin')
 const app = express()
+const startCronJobs = require('./config/startCronJobs')
 const connectDB = require('./db/connectDB')
 const session = require('express-session')
 const passport = require('./config/passport')
@@ -34,6 +35,8 @@ app.use(passport.session())
 
 app.use('/',userRoutes);
 app.use('/admin',adminRoutes)
+
+startCronJobs()
 
 app.listen(3000,()=>{
     console.log("server is running");

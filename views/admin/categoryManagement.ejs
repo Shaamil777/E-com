@@ -228,11 +228,11 @@
                         </td>
                         <td>
                           <% if(!category.isOfferApplied) {%>
-                          <button id="btn-offer" class="btn btn-outline-success btn-offer" onclick="showmodal('<%=category._id%>')">
+                          <button id="btn-offer" class="btn btn-outline-success btn-offer" data-id="<%= category.name %>" >
                             Apply offer
                           </button>
                           <% }else{ %>
-                            <button class="btn btn-outline-success btn-offer-remove" data-id="<%= category._id %>">
+                            <button class="btn btn-outline-success btn-offer-remove" data-id="<%= category.name %>">
                               Remove offer
                             </button>
                             <% } %>
@@ -242,14 +242,43 @@
                   </tbody>
                 </table>
               </div>
-              <div id="offerModal" class="modal" style="display: none; position: relative;left: 175px;top: -329px;" >
-                <div class="modal-content">
-                  <h4>Apply Offer</h4>
-                  <label for="offerPercentage">Offer Percentage:</label>
-                  <input type="number" id="offerPercentage" placeholder="Enter offer percentage" />
-                  <button onclick="applyOffer()">Apply Offer</button>
-                  <button onclick="closeModal()">Cancel</button>
+              <div id="offerModal" class="modal" style="display: none;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h5 class="modal-title">Apply Offer</h5>
+                      <button type="button" class="close" onclick="openModal()">&times;</button>
+                    </div>
+              
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                      <form id="offerForm">
+                        <div class="form-group">
+                          <label for="discountPercentage">Discount Percentage</label>
+                          <input type="number" id="discountPercentage" class="form-control" placeholder="Enter discount percentage" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="startDate">Start Date</label>
+                          <input type="date" id="startDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="endDate">End Date</label>
+                          <input type="date" id="endDate" class="form-control" required>
+                        </div>
+                        <input type="hidden" id="categoryName" value="">
+                      </form>
+                    </div>
+              
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" id="applyOfferBtn">Apply</button>
+                      <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              
               </div>
             </div>
           </div>
@@ -329,119 +358,105 @@
   })
 </script>
 <script>
-  let catId=null;
-  function showmodal(categoryId){
-     catId=categoryId;
-     document.getElementById('offerModal').style.display = 'block';
-  }
+  function openModal() {
+  document.getElementById('offerModal').style.display = 'block';
+}
 
-  async function applyOffer(){
-    let offerPercentage=document.getElementById('offerPercentage').value
-    if(!offerPercentage){
-      swal.fire({
-        title: 'Error',
-        text: 'Please enter offer percentage',
-        icon: 'error',
-        confirmButtonText: 'Okay'
-      })
-      return;
-    }
-    if(offerPercentage>70){
-      swal.fire({
-        title: 'Error',
-        text: 'Offer percentage should not exceed 70%',
-        icon: 'error',
-        confirmButtonText: 'Okay'
-      })
-      return;
-    }
-    if(offerPercentage<=0){
-      swal.fire({
-        title: 'Error',
-        text: 'Offer percentage should not be negative',
-        icon: 'error',
-        confirmButtonText: 'Okay'
-      })
-      return;
-    }
+function closeModal() {
+  document.getElementById('offerModal').style.display = 'none';
+};
 
-    try {
-      const response = await fetch(`/admin/categorymanagement/${catId}/apply`,{
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({offerPercentage:offerPercentage})
-      })
-      const result = await response.json()
-      if(result.success){
-        swal.fire({
-          title: 'Success',
-          text: 'Offer applied successfully',
-          icon:'success',
-          confirmButtonText: 'Okay'
-        }).then(()=>{
-          window.location.href='/admin/categorymanagement'
-        })
-      }else{
-        swal.fire({
-          title: 'Error',
-          text: result.message,
-          icon: 'error',
-          confirmButtonText: 'Okay'
-        })
-      }
-    } catch (error) {
-      console.error("Error while applying offer:",error);
+document.querySelectorAll('.btn-offer').forEach((button)=>{
+  button.addEventListener('click',async function(){
+    const categoryName = button.getAttribute('data-id');
+    document.getElementById('categoryName').value = categoryName;
+    openModal()
+  })
+})
+
+document.getElementById('applyOfferBtn').addEventListener('click',async function(){
+  const discountPercentage = document.getElementById('discountPercentage').value;
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+  const categoryName = document.getElementById('categoryName').value;
+
+  try {
+    const response = await fetch(`/admin/${categoryName}/applyoffer`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({discountPercentage, startDate, endDate})
+    })
+    const result = await response.json()
+    if(result.success){
+      closeModal();
       swal.fire({
-        title: 'Error',
-        text: 'Failed to apply offer',
-        icon: 'error',
-        confirmButtonText: 'Okay'
+        icon:'success',
+        title:'Offer Applied',
+        text:result.message,
+        confirmButtonText:'Okay'
+      }).then(()=>{
+        window.location.reload();
+      })
+    }else{
+      swal.fire({
+        icon:'error',
+        title:'Error',
+        text:result.message,
+        confirmButtonText:'Okay'
       })
     }
+  } catch (error) {
+    console.error(error);
+    swal.fire({
+      icon:'error',
+      title:'Error',
+      text:result.message,
+      confirmButtonText:'Okay'
+    })
   }
+})
 
-  function closeModal(){
-    document.getElementById('offerModal').style.display = 'none';
-  }
+
 </script>
 <script>
   document.querySelectorAll('.btn-offer-remove').forEach((button)=>{
-    button.addEventListener('click',async function(e){
-      const categoryId = button.getAttribute('data-id');
-      console.log(categoryId);
-
-      try {
-        const response = await fetch(`/admin/categorymanagement/${categoryId}/remove`,{
-          method:"PUT",
-          headers:{
-            "Content-Type": "application/json"
+    button.addEventListener('click',async function(){
+      const categoryName = button.getAttribute('data-id');
+      try{
+        const response = await fetch(`/admin/${categoryName}/removeoffer`,{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
           }
         });
-
         const result = await response.json();
-
         if(result.success){
           swal.fire({
-            title:"success",
+            icon:'success',
+            title:'Offer Removed',
             text:result.message,
-            icon:"success",
-            confirmButtonText:"Okay"
+            confirmButtonText:'Okay'
           }).then(()=>{
-            window.location.reload()
+            window.location.reload();
           })
         }else{
           swal.fire({
-            title: 'Error',
-            text: result.message,
-            icon: 'error',
-            confirmButtonText: 'Okay'
+            icon:'error',
+            title:'Error',
+            text:result.message,
+            confirmButtonText:'Okay'
           })
         }
-      } catch (error) {
-        console.error("Error while removing offer:",error);
-        alert("Failed to remove offer");
+      }catch(error){
+        console.error(error);
+        swal.fire({
+          icon:'error',
+          title:'Error',
+          text:result.message,
+          confirmButtonText:'Okay'
+        })
       }
     })
   })

@@ -12,6 +12,12 @@
       href="https://unpkg.com/cropperjs@1.5.12/dist/cropper.min.css"
       rel="stylesheet"
     />
+    <style>
+      #msg {
+    font-size: 14px;
+    margin-top: 10px;
+}
+    </style>
 </head>
 
 <body>
@@ -241,23 +247,56 @@ function startCropping(index) {
 
 <script>
 
-  const form =document.getElementById('form');
-  form.addEventListener('submit',(e)=> {
-    if(!addProductValidate){
-      e.preventDefault(); // Prevent form submission
-    }   
-  });
+document.getElementById('form').addEventListener('submit', (e) => {
+    if (!validateProductForm()) {
+        e.preventDefault(); 
+    }
+});
 
-
-  function addProductValidate(){
-    const name = document.getElementById('productName');
-    const price = document.getElementById('productPrice');
-    const stock = document.getElementById('productStock');
-    const warrenty = document.getElementById('productWarrenty');
-    const image = document.getElementById('productImage');
+function validateProductForm() {
     
-  }
+    const productName = document.getElementById('categoryName').value.trim();
+    const productDescription = document.getElementById('categoryDescription').value.trim();
+    const productCategory = document.getElementById('category').value.trim();
+    const productBrand = document.getElementById('categoryDescription').value.trim();
+    const productPrice = document.getElementById('categoryDescription').value.trim();
+    const productStock = document.getElementById('productStock').value.trim();
+    const productWarrenty = document.getElementById('productWarrenty').value.trim();
+    const productReturn = document.getElementById('categoryReturn').value.trim();
 
+    const images = [...document.querySelectorAll('.product-image')].filter(input => input.files.length > 0);
+
+    
+    const messageBox = document.getElementById('msg');
+    messageBox.textContent = '';
+    messageBox.style.color = 'red';
+
+   
+    if (!productName || !productDescription || !productCategory || !productBrand || !productPrice || !productStock || !productWarrenty || !productReturn) {
+        messageBox.textContent = 'All fields are required. Please fill in all the details.';
+        return false;
+    }
+
+    if (isNaN(productPrice) || productPrice <= 0) {
+        messageBox.textContent = 'Price should be a valid number greater than 0.';
+        return false;
+    }
+
+    if (isNaN(productStock) || productStock < 0) {
+        messageBox.textContent = 'Stock should be a valid non-negative number.';
+        return false;
+    }
+
+    if (images.length === 0) {
+        messageBox.textContent = 'Please upload at least one product image.';
+        return false;
+    }
+
+    
+    messageBox.textContent = 'Form is valid! Submitting...';
+    messageBox.style.color = 'green';
+    return true;
+}
 
 
 // </script>

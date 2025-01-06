@@ -21,6 +21,133 @@
     <link rel="stylesheet" href="/styles/user.css">
 
     <title>Ecommerce Website</title>
+    <style>
+      /* Order Details Section Styling */
+.tabs__content {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+.tab__header {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #edf2f7;
+  font-weight: 600;
+}
+
+/* Order Table Styling */
+.placed__order-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 2rem;
+}
+
+.placed__order-table thead {
+  background-color: #f8fafc;
+}
+
+.placed__order-table th {
+  color: #4a5568;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.placed__order-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #edf2f7;
+  color: #4a5568;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.placed__order-table img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 0.25rem;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.placed__order-table img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Price Column */
+.placed__order-table td:last-child {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* Shipping Address Section */
+#shipping-address .tab__body {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+#shipping-address .tab__body p {
+  margin-bottom: 0.75rem;
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+#shipping-address .tab__body strong {
+  color: #2d3748;
+  font-weight: 600;
+  display: inline-block;
+  width: 120px;
+}
+
+/* Empty State */
+.text-center {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tabs__content {
+    padding: 1rem;
+  }
+
+  .placed__order-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .placed__order-table th,
+  .placed__order-table td {
+    padding: 1rem;
+  }
+
+  .tab__header {
+    font-size: 1.25rem;
+  }
+
+  #shipping-address .tab__body {
+    padding: 1rem;
+  }
+}
+    </style>
   </head>
   <body>
 
@@ -66,14 +193,6 @@
                   <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
                 </div>
 
-
-
-
-
-
-
-
-
                 <div class="tabs__content">
                     <div class="tab__content" id="orders">
                       <h3 class="tab__header">Your Order Details</h3>
@@ -92,10 +211,12 @@
                               <% order.orderItems.forEach(function(item) { %>
                                 <tr>
                                   <td>
-                                    <%= item.productId.name %>
+                                    <a href="/itemdetail/<%= item.productId._id %>" class="product-link text-info">
+                                      <%= item.productId.name %>
+                                    </a>
                                   </td>
-                                  <td><img style="width: 60px; height: 60px; object-fit: contain; border-radius: 5px;" src="/<%= item.productId.image[0] %>" alt="<%= item.productId.name %>" class="product__image" />
-                                    
+                                   <td><img style="width: 60px; height: 60px; object-fit: contain; border-radius: 5px;" src="/<%= item.productId.image[0] %>" alt="<%= item.productId.name %>" class="product__image" />
+                                     
                                    </td>
                                   <td><%= item.quantity %></td>
                                   <td>₹<%= item.price.toFixed(2) %></td>
@@ -126,32 +247,12 @@
                           <% } %>
                         </div>
                       </div>
-
-
-                     </div>                    
+                    </div>                    
                     </div>
                   </div>
-                  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <%- include('../partials/userFooter') %>
-
             </body>
-            </html>
-          
+            </html> 
             <script>
               document.getElementById('dashboard').addEventListener('click', function(){
                   window.location.href = '/profile'

@@ -130,9 +130,19 @@ document.getElementById('statusform').addEventListener('submit',async function(e
 
         const data = await response.json();
         if(data.success){
-            alert(data.message);
+            Swal.fire({
+              icon:'success',
+              title: 'Success',
+              text: data.message,
+              confirmButtonColor: '#3085d6',
+            })
         }else{
-            alert(data.message);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: data.message,
+              confirmButtonColor: '#3085d6',
+            })
         }
     } catch (error) {
         

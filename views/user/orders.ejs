@@ -23,6 +23,30 @@
     <title>Ecommerce Website</title>
     
     <style>
+      .pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pagination-btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
+
+
+
 .cancel__order:hover {
   background-color: darkred; /* Darker red on hover */
 }
@@ -193,11 +217,6 @@
                   </p>
                   <p id="logout" class="account__tab"><i class="fi fi-rs-exit"></i> Logout</p>
                 </div>
-    
-
-  
-           
-
 
                 <div class="tabs__content">
                   <div class="tab__content border-0 " id="orders">
@@ -278,14 +297,32 @@
                         </form>
                       </div>
                       
+                      <div class="pagination-container">
+                        <% if (currentPage > 1) { %>
+                          <a href="/orders?page=<%= currentPage - 1 %>" class="pagination-btn">Previous</a>
+                        <% } else { %>
+                          <button class="pagination-btn" disabled>Previous</button>
+                        <% } %>
+                      
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                          <% if (i === currentPage) { %>
+                            <button class="pagination-btn" disabled><%= i %></button>
+                          <% } else { %>
+                            <a href="/orders?page=<%= i %>" class="pagination-btn"><%= i %></a>
+                          <% } %>
+                        <% } %>
+                      
+                        <% if (currentPage < totalPages) { %>
+                          <a href="/orders?page=<%= currentPage + 1 %>" class="pagination-btn">Next</a>
+                        <% } else { %>
+                          <button class="pagination-btn" disabled>Next</button>
+                        <% } %>
+                      </div>
                       
                     </div>
                   </div>
-                </div>      
+                </div>            
     </div>
-    
-    
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
       <%- include('../partials/userFooter') %>
@@ -553,3 +590,5 @@
 });
 
 </script>
+
+

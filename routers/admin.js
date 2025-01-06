@@ -31,8 +31,8 @@ router.put('/category/recover',adminAuth,categoryController.recoverCategory);
 router.post('/admin/category/update/:categoryId',adminAuth, categoryController.categoryUpdate);
 router.post('/update-category-image/:categoryId',upload_2.single('categoryImage'),categoryController.categoryImageUpdate);
 router.post('/category/update/:categoryId',adminAuth, categoryController.categoryUpdate);
-router.put('/categorymanagement/:catId/apply',adminAuth,categoryController.applyOffer)
-router.put('/categorymanagement/:categoryId/remove',adminAuth,categoryController.removeOffer)
+router.post('/:catName/applyoffer',categoryController.applyOffer)
+router.post('/:catName/removeoffer',categoryController.removeOffer)
 
 router.get('/productmanagement',adminAuth,productController.loadProductManagement)
 router.get('/product/add',adminAuth,productController.loadAddProduct)
@@ -47,12 +47,8 @@ router.put('/product/delete',adminAuth,productController.deleteProduct)
 router.get('/product/deletedproduct',adminAuth,productController.loadDeletedProduct)
 router.put('/product/recover',adminAuth,productController.recoverProduct)
 router.get('/product/update/:id',adminAuth,productController.loadUpdateProduct)
-router.put('/product/update', upload.fields([
-  { name: 'productImage1', maxCount: 1 },
-  { name: 'productImage2', maxCount: 1 },
-  { name: 'productImage3', maxCount: 1 },
-  { name: 'productImage4', maxCount: 1 }
-]), productController.updateProduct);
+router.put('/product/update',productController.updateProduct);
+router.post('/update-product-image/:productId', upload.single('productImage'), productController.productImageUpdate);
 
 
 
