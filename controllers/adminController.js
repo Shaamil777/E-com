@@ -197,7 +197,7 @@ const loadSalesReport = async(req,res)=>{
         }).populate('userId','name')
 
         const totalSaleAmount = orders.reduce((sum,order) => sum+order.totalAmount,0)
-        res.render('admin/SalesReport',{
+        res.render('admin/salesReport',{
             totalSaleAmount,
             orders:orders.map((order)=>({
                 orderId:order._id,
