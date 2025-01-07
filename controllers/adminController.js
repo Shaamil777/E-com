@@ -140,7 +140,7 @@ const loadUserManagement = async(req,res)=>{
         if(!user){
            return res.render('admin/userManagement',{message:"No users found"})
         }else{
-            return res.render('admin/usermanagement',{users:user})
+            return res.render('admin/userManagement',{users:user})
         }  
     } catch (error) {
         console.error("Error while loading users:",error)
