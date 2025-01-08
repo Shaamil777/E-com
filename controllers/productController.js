@@ -132,15 +132,13 @@ const  productImageUpdate=async(req, res)=>{
 
 
 const updateProduct = async (req, res) => {
+    
     const { productName, productDescription, productId, productCategory, productBrand, productPrice, productStock, productWarrenty, productReturn } = req.body;
 
-
-    
-   
-
-
+    console.log(productName)
     try {
         const product = await Product.findById(productId);
+        console.log(product)
         if (!product) {
             // Return a JSON response instead of plain text
             return res.status(404).json({ success: false, message: 'Product not found' });

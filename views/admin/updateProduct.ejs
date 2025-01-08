@@ -215,26 +215,21 @@
                 productWarrenty: productWarrenty,
                 productReturn: productReturn,
             };
-    
+    console.log(data)
             // Create a new FormData object for the images
-            const formData = new FormData();
+           
 
-            
-            
-            
-    
             // Append the rest of the data to formData
-            Object.keys(data).forEach(key => {
-                if (data[key] !== undefined) {
-                    formData.append(key, data[key]);
-                }
-            });
+           
 
     
             try {
                 const response = await fetch('/admin/product/update', {
                     method: 'PUT',
-                    body: formData // Send the FormData object which includes both text and files
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data) // Send the FormData object which includes both text and files
                 });
     
                 const result = await response.json();
