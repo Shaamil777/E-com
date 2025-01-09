@@ -299,6 +299,7 @@
   </div>
   <!-- page-body-wrapper ends -->
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
   
@@ -339,7 +340,6 @@
           body : JSON.stringify({productId:productId})
         })
         const result = await response.json();
-        console.log(result)
         if(result.success){
           swal.fire({
             title: 'Success',
@@ -352,7 +352,12 @@
         }
       } catch(error) {
         console.error('Error while deleting product',error)
-        alert('Failed to delete product')
+        swal.fire({
+          title: 'Error',
+          text: 'Failed to delete product',
+          icon: 'error',
+          timer: 1500
+        })
       }
     })
   })

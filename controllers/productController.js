@@ -186,7 +186,7 @@ const deleteProduct = async(req,res)=>{
     
     try {
         const product = await Product.findByIdAndUpdate(productId,{isDeleted:true},{new:true});
- 
+        console.log(product)
         if(!product){
             return res.status(404).json({message:"product not found"})
         }
