@@ -209,20 +209,28 @@ const loadProfile = async(req,res)=>{
 
 
 //loading the orders in my account
-const loadOrders = async(req,res)=>{
-    const userId = req.session.userData.id
-    const page = parseInt(req.query.page)||1;
-    const limit = 5
+const loadOrders = async (req, res) => {
+    const userId = req.session.userData.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+
     try {
-        const ordersCount = await Order.countDocuments();
-        const orders = await Order.find({userId}).skip((page-1)*limit).limit(limit)
-        res.render('user/orders',{orders:orders,currentPage:page,totalPages:Math.ceil(ordersCount / limit)})   
-    } catch (error) {
-        console.error("Error loading orders page :",error)
-        res.status(500).send("Error loading orders page. Please try again.")
+        const ordersCount = await Order.countDocuments({ userId }); // Only count orders for the user
+        const orders = await Order.find({ userId })
+            .sort({ createdAt: -1 }) // Sort by latest
+            .skip((page - 1) * limit)
+            .limit(limit); // Pagination
         
+        res.render('user/orders', {
+            orders: orders,
+            currentPage: page,
+            totalPages: Math.ceil(ordersCount / limit),
+        });
+    } catch (error) {
+        console.error("Error loading orders page:", error);
+        res.status(500).send("Error loading orders page. Please try again.");
     }
-}   
+};
 
 
 
