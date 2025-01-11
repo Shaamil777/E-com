@@ -1115,7 +1115,7 @@ const downloadInvoice = async (req, res) => {
 
 //filtering the products in shop page
 const filter = async (req, res) => {
-    const { category, priceOrder, alphabetOrder } = req.query;
+    const { category, priceOrder, alphabetOrder,search } = req.query;
 
     let query = {}; // Filtering criteria
     let sort = {}; // Sorting criteria
@@ -1123,6 +1123,10 @@ const filter = async (req, res) => {
     // Filter by category
     if (category && category !== 'all') {
         query.category = category;
+    }
+
+    if(search){
+        query.name = {$regex:search, $options:'i'}
     }
 
     // Add sorting for price if specified

@@ -121,6 +121,17 @@
                 </div>
            
                 <!-- Alphabet End -->
+                <form action="">
+                   <!-- Search Form -->
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search-input" placeholder="Search by name" autocomplete="off">
+                    <div class="input-group-append">
+                        <span class="input-group-text bg-transparent text-primary">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+                </form>
             </div>
             <!-- Shop Sidebar End -->
 
@@ -130,21 +141,8 @@
                 <div class="row pb-3">
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
-                            <form action="">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search by name">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text bg-transparent text-primary">
-                                            <i class="fa fa-search"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </form>
                             <div class="dropdown ml-4">
-                                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                            Sort by
-                                        </button>
+                               
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
                                     <a class="dropdown-item" href="#">Latest</a>
                                     <a class="dropdown-item" href="#">Popularity</a>
@@ -215,22 +213,29 @@
 
 </html>
 <script>
-    $(document).ready(function () {
-    // Attach change event listeners to filters
-    $('#price-filter, #category-filter, #alphabet-filter').on('change', function () {
+   $(document).ready(function () {
+    // Prevent form submission to avoid page reload
+    $('form').on('submit', function (e) {
+        e.preventDefault();
+    });
+
+    // Attach change and keyup event listeners to filters and search
+    $('#price-filter, #category-filter, #alphabet-filter, #search-input').on('change keyup', function () {
         // Get selected filter values
         const priceOrder = $('#price-filter').val();
         const category = $('#category-filter').val();
         const alphabetOrder = $('#alphabet-filter').val();
+        const search = $('#search-input').val();
 
-        // Send AJAX request to fetch filtered products
+        // Send AJAX request to fetch filtered and searched products
         $.ajax({
             url: '/api/products',
             method: 'GET',
             data: {
                 category: category,
                 priceOrder: priceOrder,
-                alphabetOrder: alphabetOrder
+                alphabetOrder: alphabetOrder,
+                search: search
             },
             success: function (response) {
                 // Update product list with the fetched data
@@ -242,7 +247,7 @@
         });
     });
 
-    // Function to render products
+    // Function to render products (same as before)
     function renderProducts(products) {
         const productContainer = $('.row.pb-3');
         productContainer.empty(); // Clear existing products
