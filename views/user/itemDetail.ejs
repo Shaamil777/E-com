@@ -173,8 +173,11 @@
                         </div>
                         <small class="pt-1">(50 Reviews)</small>
                     </div>
-                    <h3 class="font-weight-semi-bold mb-4">&#8377;<%= product.price %>
+                    <h3 class="font-weight-semi-bold mb-2">&#8377;<%= product.price %>
                     </h3>
+                    <% if (product.withoutOfferPrice) { %>
+                        <h5 style="color: rgba(255, 72, 0, 0.733); text-decoration: line-through;">&#8377;<%= product.withoutOfferPrice %></h5>
+                    <% } %>
                     <p class="mb-4">
                         <%=product.description%>
                     </p>
